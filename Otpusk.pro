@@ -45,4 +45,5 @@ QT += network
 HEADERS += \
     api.h \
     src/tour.h \
+    src/toursloader.h \
     src/toursmodel.h

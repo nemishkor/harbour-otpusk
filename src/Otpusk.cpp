@@ -3,9 +3,10 @@
 #endif
 
 #include <sailfishapp.h>
-#include <api.h>
+#include "api.h"
 #include <QString>
-#include "toursmodel.h"
+#include "toursloader.h"
+#include "Message.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,17 +26,17 @@ int main(int argc, char *argv[])
 
     QQmlContext *context = view.data()->rootContext();
 
-    ToursModel toursModel;
-    toursModel.addTour(Tour(QString("foo")));
-    toursModel.addTour(Tour(QString("bar")));
-    context->setContextProperty("toursModel", &toursModel);
+    Api api;
+    context->setContextProperty("api", &api);
+    ToursLoader toursLoader(&api);
+    context->setContextProperty("toursLoader", &toursLoader);
 
     // If you wish to publish your app on the Jolla harbour, it is recommended
     // that you prefix your internal namespaces with "harbour.".
     //
     // For details see:
     // https://harbour.jolla.com/faq#1.5.0
-    qmlRegisterType<Api>("harbour.otpusk", 1, 0, "Api");
+//    qmlRegisterType<ToursLoader>("harbour.otpusk", 1, 0, "ToursLoader");
 
     // Start the application.
     view->setSource(SailfishApp::pathTo("qml/Otpusk.qml"));

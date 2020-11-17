@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.otpusk 1.0
 import "../components"
 
 Page {
@@ -9,10 +8,6 @@ Page {
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
-    Api{
-        id: api
-    }
-
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -20,64 +15,94 @@ Page {
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
-                text: qsTr("Load")
-                onClicked: api.load()
+                text: qsTr("Search")
+                onClicked: toursLoader.load()
             }
         }
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: parent.height
+        contentHeight: pageHeader.height
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
-        Column {
-            id: column
-
+        Column{
+            id: pageHeader
             width: parent.width
-            height: parent.height
             spacing: Theme.paddingMedium
-
-            Column{
-                id: pageHeader
-                width: parent.width
-                PageHeader {
-                    title: qsTr("Otpusk")
-                }
-                Label{
-                    x: Theme.horizontalPageMargin
-                    text: "lastResult " + (api.lastResult ? "true" : "false")
-                    color: Theme.secondaryHighlightColor
-                    font.pixelSize: Theme.fontSizeMedium
-                }
-                Label{
-                    x: Theme.horizontalPageMargin
-                    text: "total" + api.total
-                    color: Theme.secondaryHighlightColor
-                    font.pixelSize: Theme.fontSizeMedium
+            PageHeader {
+                title: qsTr("Otpusk")
+                BusyIndicator {
+                    running: toursLoader.loading
+                    size: BusyIndicatorSize.Medium
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.topMargin: Theme.paddingLarge
+                    anchors.leftMargin: Theme.horizontalPageMargin
                 }
             }
-
-
-            Item {
-                id: toursItem
-                width: parent.width
-                height: parent.height - Theme.paddingMedium - pageHeader.height
-
-                SilicaListView {
-                    id: toursListView
-
-                    anchors.fill: parent
-                    clip: true
-
-                    model: toursModel
-                    delegate: ToursListViewItem {
-                        nameLabel.text: model.name
-                    }
-                }
-
+            Label{
+                visible: toursLoader.replyFailed
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                text: toursLoader.replyErrorText
+                color: Theme.errorColor
+                font.pixelSize: Theme.fontSizeMedium
+                wrapMode: "WordWrap"
             }
-
+            Label{
+                visible: !toursLoader.loading && !toursLoader.replyFailed && toursLoader.total === 0
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                text: "Nothing found. Change search parameters"
+                wrapMode: "WordWrap"
+                color: Theme.secondaryHighlightColor
+                font.pixelSize: Theme.fontSizeLarge
+            }
+            ProgressBar{
+                id: progressBar
+                visible: toursLoader.loading
+                width: parent.width
+                maximumValue: 100
+                value: toursLoader.progress
+                label: toursLoader.progress + " %"
+            }
         }
 
+
+//            Item {
+//                id: toursItem
+//                width: parent.width
+//                height: parent.height - Theme.paddingMedium - pageHeader.height
+
+//                SilicaListView {
+//                    id: toursListView
+
+//                    anchors.fill: parent
+//                    clip: true
+
+//                    model: toursLoader.toursModel
+//                    delegate: ToursListViewItem {
+//                        nameLabel.text: model.name
+//                    }
+//                }
+
+//            }
+
     }
+
+    Rectangle{
+        visible: toursLoader.total !== 0
+        color: Theme.highlightDimmerColor
+        radius: 10 * Theme.pixelRatio
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: Theme.paddingLarge
+        width: 140
+        height: Theme.fontSizeMedium * 1.1
+        Text {
+            anchors.centerIn: parent
+            text: String(toursLoader.total)
+            color: Theme.highlightColor
+            font.pixelSize: Theme.fontSizeSmall
+        }
+    }
+
 }

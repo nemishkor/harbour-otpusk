@@ -11,11 +11,15 @@
 <context>
     <name>FirstPage</name>
     <message>
-        <source>Load</source>
+        <source>Otpusk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Otpusk</source>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

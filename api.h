@@ -11,55 +11,39 @@
 #include <QObject>
 #include <QString>
 #include <QUrl>
+#include <QUrlQuery>
 
 class Api : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString lastResult READ getLastResult NOTIFY lastResultChanged)
-    Q_PROPERTY(QString total READ getTotal NOTIFY totalChanged)
 
 public:
-    Api(QObject *parent = nullptr){
+    Api(){
         networkManager = new QNetworkAccessManager(this);
         connect(networkManager, &QNetworkAccessManager::finished, this, &Api::replyFinished);
     }
 
-    bool getLastResult() {
-        return lastResult;
-    }
-
-    int getTotal() {
-        return total;
-    }
-
-    Q_INVOKABLE void load() {
-        QNetworkRequest request(QUrl("http://example.com/exampleapi"));
+    void search(QUrl url, QJsonObject json) {
+        QUrlQuery query = QUrlQuery(url.query());
+        query.addQueryItem("lang", "ukr");
+        query.addQueryItem("access_token", "");
+        url.setQuery(query);
+        qDebug(qPrintable(url.toString()));
+        QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
-        QJsonObject json;
-        json.insert("lang", "ukr");
-        json.insert("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
         networkManager->post(request, QJsonDocument(json).toJson());
     }
 
     void replyFinished(QNetworkReply *reply){
-        if(reply->isFinished()){
-            QByteArray responseData = reply->readAll();
-            QJsonDocument json = QJsonDocument::fromJson(responseData);
-        }
-        qDebug("Request not finished yet");
+        emit searchFinished(reply);
     }
 
 private:
-    bool lastResult;
-    int total;
     QNetworkAccessManager *networkManager;
 
-
-
 signals:
-    void lastResultChanged();
-    void totalChanged();
+    void searchFinished(QNetworkReply*);
 
 };
 
