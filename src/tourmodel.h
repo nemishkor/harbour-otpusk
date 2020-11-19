@@ -11,18 +11,30 @@ public:
             const QString &name,
             const QString &city,
             const QString &country,
-            const QString &size);
+            const double ratingAvarage,
+            const int ratingCount,
+            const double priceUah,
+            const double price,
+            const QString currency);
 
     QString name() const;
     QString city() const;
     QString country() const;
-    QString size() const;
+    double ratingAvarage() const;
+    int ratingCount() const;
+    double priceUah() const;
+    double price() const;
+    QString currency() const;
 
 private:
     QString m_name;
     QString m_city;
     QString m_country;
-    QString m_size;
+    double m_ratingAvarage;
+    int m_ratingCount;
+    double m_priceUah;
+    double m_price;
+    QString m_currency;
 };
 
 class TourModel : public QAbstractListModel
@@ -33,7 +45,11 @@ public:
         NameRole = Qt::UserRole + 1,
         CityRole,
         CountryRole,
-        SizeRole
+        RatingAvarageRole,
+        RatingCountRole,
+        PriceUahRole,
+        PriceRole,
+        CurrencyRole
     };
 
     TourModel(QObject *parent = 0);

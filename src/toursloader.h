@@ -196,10 +196,15 @@ private slots:
                 QJsonObject hotels = json.object()["hotels"].toObject()["1"].toObject();
                 for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
                     QJsonObject hotel = (*hotelsIterator).toObject();
-                    tourModel.addTour(Tour(hotel["n"].toString(),
-                                          hotel["c"].toObject()["n"].toString(),
-                                          hotel["t"].toObject()["n"].toString(),
-                                          "Small"));
+                    tourModel.addTour(Tour(
+                            hotel["n"].toString(),
+                            hotel["c"].toObject()["n"].toString(),
+                            hotel["t"].toObject()["n"].toString(),
+                            hotel["r"].toDouble(),
+                            hotel["v"].toString().toInt(),
+                            hotel["p"].toDouble(),
+                            hotel["po"].toDouble(),
+                            hotel["pu"].toString()));
                 }
 
                 emit tourModelChanged();

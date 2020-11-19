@@ -91,14 +91,53 @@ Page {
 
                         Text {
                             font.pixelSize: Theme.fontSizeMedium
+                            width: parent.width - progressCircle.width
                             color: Theme.highlightColor
                             text: name
+
+                            ProgressCircle {
+                                id: progressCircle
+                                anchors.left: parent.right
+                                anchors.top: parent.top
+                                progressValue: ratingAvarage / 10
+                                progressColor: ratingAvarage > 6 ? "#8051D511" : (ratingAvarage > 4 ? "#80DEB321" : "#80EC4713")
+                                Label{
+                                    anchors.fill: parent
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: ratingCount
+                                    font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                                }
+                                Label{
+                                    anchors.top: parent.bottom
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: ratingAvarage + "/10"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                }
+                            }
                         }
 
                         Text {
                             font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.primaryColor
+                            color: Theme.secondaryColor
                             text: country + ", " + city
+                        }
+                        Row{
+                            spacing: Theme.paddingLarge
+                            Text {
+                                id: priceUahLabel
+                                font.pixelSize: Theme.fontSizeLarge
+                                color: Theme.primaryColor
+                                text: priceUah + "₴"
+                            }
+                            Text {
+                                anchors.baseline: priceUahLabel.baseline
+                                font.pixelSize: Theme.fontSizeMedium
+                                color: Theme.secondaryColor
+                                text: price + currency
+                            }
                         }
                     }
 
