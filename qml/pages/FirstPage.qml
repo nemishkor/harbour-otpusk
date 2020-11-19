@@ -21,7 +21,7 @@ Page {
         }
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: pageHeader.height
+        contentHeight: parent.height
 
         Column{
             id: pageHeader
@@ -66,25 +66,58 @@ Page {
             }
         }
 
+        Item {
+            id: toursItem
+            width: parent.width
+            height: parent.height - Theme.paddingMedium - pageHeader.height
+            anchors.top: pageHeader.bottom
 
-//            Item {
-//                id: toursItem
-//                width: parent.width
-//                height: parent.height - Theme.paddingMedium - pageHeader.height
+            SilicaListView {
+                anchors.fill: parent
+                clip: true
+                model: toursLoader.tourModel
+                delegate: ListItem{
+                    contentHeight: mainColumn.height + separator.height + 2 * Theme.paddingMedium
+                    contentWidth: parent.width
 
-//                SilicaListView {
-//                    id: toursListView
+                    Column {
+                        id: mainColumn
+                        width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                        spacing: Theme.paddingSmall
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            verticalCenter: parent.verticalCenter
+                        }
 
-//                    anchors.fill: parent
-//                    clip: true
+                        Text {
+                            font.pixelSize: Theme.fontSizeMedium
+                            color: Theme.highlightColor
+                            text: name
+                        }
 
-//                    model: toursLoader.toursModel
-//                    delegate: ToursListViewItem {
-//                        nameLabel.text: model.name
-//                    }
-//                }
+                        Text {
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.primaryColor
+                            text: country + ", " + city
+                        }
+                    }
 
-//            }
+                    Separator {
+                        id: separator
+                        anchors {
+                            top: mainColumn.bottom
+                            topMargin: Theme.paddingMedium
+                        }
+
+                        width: parent.width
+                        color: Theme.primaryColor
+                        horizontalAlignment: Qt.AlignHCenter
+                    }
+
+                }
+            }
+
+        }
 
     }
 

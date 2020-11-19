@@ -6,7 +6,7 @@
 #include "api.h"
 #include <QString>
 #include "toursloader.h"
-#include "Message.h"
+#include "tourmodel.h"
 
 int main(int argc, char *argv[])
 {

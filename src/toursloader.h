@@ -7,15 +7,16 @@
 #include <QNetworkReply>
 #include <QString>
 #include <QTimer>
+#include <QList>
 #include "api.h"
-#include "toursmodel.h"
+#include "tourmodel.h"
 
 class ToursLoader : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int progress READ getProgress NOTIFY progressChanged)
     Q_PROPERTY(int total READ getTotal NOTIFY totalChanged)
-//    Q_PROPERTY(ToursModel* toursModel READ getToursModel NOTIFY toursModelChanged)
+    Q_PROPERTY(TourModel* tourModel READ getTourModel NOTIFY tourModelChanged)
     Q_PROPERTY(bool loading READ getLoading NOTIFY loadingChanged)
     Q_PROPERTY(bool replyFailed READ isReplyFailed NOTIFY isReplyFailedChanged)
     Q_PROPERTY(QString replyErrorText READ getReplyErrorText NOTIFY replyErrorTextChanged)
@@ -27,6 +28,43 @@ public:
     }
 
     Q_INVOKABLE void load(){
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        tourModel.addTour(Tour("Hotel foo", "Medium"));
+//        tourModel.addTour(Tour("Hotel bar", "Large"));
+//        tourModel.addTour(Tour("Hotel baz", "Small"));
+//        return;
         requestNumber = 0;
         setLoading(true);
         sendSearchRequest();
@@ -76,9 +114,9 @@ public:
         }
     }
 
-//    ToursModel* getToursModel() {
-//        return &toursModel;
-//    }
+    TourModel* getTourModel() {
+        return &tourModel;
+    }
 
     bool getLoading() const {
         return loading;
@@ -118,7 +156,7 @@ private:
     int requestNumber = 0;
     int progress = 0;
     int total = 0;
-//    ToursModel toursModel;
+    TourModel tourModel;
     bool loading = false;
     bool replyFailed = false;
     QString replyErrorText;
@@ -133,7 +171,7 @@ private slots:
                 qDebug("Request successfully finished");
                 QByteArray responseData = reply->readAll();
                 QJsonDocument json = QJsonDocument::fromJson(responseData);
-                qDebug(qPrintable(json.toJson()));
+//                qDebug(qPrintable(json.toJson()));
 
                 setTotal((int) json.object()["total"].toInt());
 
@@ -145,7 +183,6 @@ private slots:
                         operatorsSearchProgressDone++;
                 }
 
-
                 setProgress((int) (100 * operatorsSearchProgressDone / progressList.size()));
 
                 bool lastResult = json.object()["lastResult"].toBool();
@@ -154,11 +191,18 @@ private slots:
                 } else {
                     continueSearch();
                 }
-//                qDebug(lastResult == true ? "last result" : "not last result");
-//                emit lastResultChanged();
 
+                QJsonObject::const_iterator hotelsIterator;
+                QJsonObject hotels = json.object()["hotels"].toObject()["1"].toObject();
+                for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
+                    QJsonObject hotel = (*hotelsIterator).toObject();
+                    tourModel.addTour(Tour(hotel["n"].toString(),
+                                          hotel["c"].toObject()["n"].toString(),
+                                          hotel["t"].toObject()["n"].toString(),
+                                          "Small"));
+                }
 
-
+                emit tourModelChanged();
 
                 return;
             }
@@ -167,9 +211,9 @@ private slots:
     }
 
 signals:
+    void tourModelChanged();
     void progressChanged();
     void totalChanged();
-//    void toursModelChanged();
     void loadingChanged();
     void isReplyFailedChanged();
     void replyErrorTextChanged();

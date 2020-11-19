@@ -26,7 +26,7 @@ public:
     void search(QUrl url, QJsonObject json) {
         QUrlQuery query = QUrlQuery(url.query());
         query.addQueryItem("lang", "ukr");
-        query.addQueryItem("access_token", "");
+        query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
         url.setQuery(query);
         qDebug(qPrintable(url.toString()));
         QNetworkRequest request(url);
