@@ -28,43 +28,6 @@ public:
     }
 
     Q_INVOKABLE void load(){
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        tourModel.addTour(Tour("Hotel foo", "Medium"));
-//        tourModel.addTour(Tour("Hotel bar", "Large"));
-//        tourModel.addTour(Tour("Hotel baz", "Small"));
-//        return;
         requestNumber = 0;
         setLoading(true);
         sendSearchRequest();
@@ -188,26 +151,26 @@ private slots:
                 bool lastResult = json.object()["lastResult"].toBool();
                 if(lastResult){
                     setLoading(false);
+
+                    QJsonObject::const_iterator hotelsIterator;
+                    QJsonObject hotels = json.object()["hotels"].toObject()["1"].toObject();
+                    for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
+                        QJsonObject hotel = (*hotelsIterator).toObject();
+                        tourModel.addTour(Tour(
+                                hotel["n"].toString(),
+                                hotel["c"].toObject()["n"].toString(),
+                                hotel["t"].toObject()["n"].toString(),
+                                hotel["r"].toDouble(),
+                                hotel["v"].toString().toInt(),
+                                hotel["p"].toDouble(),
+                                hotel["po"].toDouble(),
+                                hotel["pu"].toString()));
+                    }
+
+                    emit tourModelChanged();
                 } else {
                     continueSearch();
                 }
-
-                QJsonObject::const_iterator hotelsIterator;
-                QJsonObject hotels = json.object()["hotels"].toObject()["1"].toObject();
-                for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
-                    QJsonObject hotel = (*hotelsIterator).toObject();
-                    tourModel.addTour(Tour(
-                            hotel["n"].toString(),
-                            hotel["c"].toObject()["n"].toString(),
-                            hotel["t"].toObject()["n"].toString(),
-                            hotel["r"].toDouble(),
-                            hotel["v"].toString().toInt(),
-                            hotel["p"].toDouble(),
-                            hotel["po"].toDouble(),
-                            hotel["pu"].toString()));
-                }
-
-                emit tourModelChanged();
 
                 return;
             }
