@@ -35,6 +35,21 @@ public:
         networkManager->post(request, QJsonDocument(json).toJson());
     }
 
+    void toursSuggest() {
+        QUrl url = QUrl("https://export.otpusk.com/api/tours/suggest");
+        QUrlQuery query = QUrlQuery(url.query());
+        query.addQueryItem("lang", "ukr");
+        query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
+        url.setQuery(query);
+        qDebug(qPrintable(url.toString()));
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
+        QJsonObject json = QJsonObject();
+        json.insert(QString("text"), QJsonValue(QString("")));
+        networkManager->post(request, QJsonDocument(json).toJson());
+    }
+
     void replyFinished(QNetworkReply *reply){
         emit searchFinished(reply);
     }
