@@ -7,6 +7,7 @@
 #include <QString>
 #include "toursloader.h"
 #include "tourmodel.h"
+#include "locationmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +29,8 @@ int main(int argc, char *argv[])
 
     Api api;
     context->setContextProperty("api", &api);
+    LocationModel locationModel(&api);
+    context->setContextProperty("locationModel", &locationModel);
     ToursLoader toursLoader(&api);
     context->setContextProperty("toursLoader", &toursLoader);
 
@@ -37,6 +40,7 @@ int main(int argc, char *argv[])
     // For details see:
     // https://harbour.jolla.com/faq#1.5.0
 //    qmlRegisterType<ToursLoader>("harbour.otpusk", 1, 0, "ToursLoader");
+
 
     // Start the application.
     view->setSource(SailfishApp::pathTo("qml/Otpusk.qml"));

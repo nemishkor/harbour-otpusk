@@ -24,7 +24,7 @@ class ToursLoader : public QObject
 public:
     explicit ToursLoader(Api *api){
         this->api = api;
-        connect(api, SIGNAL(searchFinished(QNetworkReply*)), this, SLOT(handleSearchReply(QNetworkReply*)));
+        connect(api, SIGNAL(searchLoaded(QNetworkReply*)), this, SLOT(handleSearchReply(QNetworkReply*)));
     }
 
     Q_INVOKABLE void load(){
@@ -132,8 +132,8 @@ private slots:
             if(!replyFailed){
 
                 qDebug("Request successfully finished");
-                QByteArray responseData = reply->readAll();
-                QJsonDocument json = QJsonDocument::fromJson(responseData);
+                    QByteArray responseData = reply->readAll();
+                    QJsonDocument json = QJsonDocument::fromJson(responseData);
 //                qDebug(qPrintable(json.toJson()));
 
                 setTotal((int) json.object()["total"].toInt());

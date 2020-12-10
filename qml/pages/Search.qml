@@ -72,11 +72,24 @@ Page {
                             }
                         }
 
-                        onSearchStringChanged: listModel.update()
-                        Component.onCompleted: listModel.update()
+                        onSearchStringChanged: locationModel.update(searchString)
+
+                        Text {
+                            visible: locationModel.networkError !== ""
+                            anchors.bottom: parent.bottom
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottomMargin: Theme.paddingLarge
+                            width: parent.width - 2 * Theme.horizontalPageMargin
+                            x: Theme.horizontalPageMargin
+                            anchors.centerIn: parent
+                            text: locationModel.networkError
+                            color: Theme.errorColor
+                            font.pixelSize: Theme.fontSizeSmall
+                            wrapMode: Text.WrapAnywhere
+                        }
 
                         SilicaListView {
-                            model: listModel
+                            model: locationModel
                             anchors.fill: parent
                             currentIndex: -1 // otherwise currentItem will steal focus
                             header:  SearchField {
@@ -108,7 +121,7 @@ Page {
                                     color: searchString.length > 0 ? (highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor)
                                                                    : (highlighted ? Theme.highlightColor : Theme.primaryColor)
                                     textFormat: Text.StyledText
-                                    text: Theme.highlightText(model.text, searchString, Theme.highlightColor)
+                                    text: Theme.highlightText(model.name, searchString, Theme.highlightColor) + ' [' + model.id + ']'
                                 }
                             }
 

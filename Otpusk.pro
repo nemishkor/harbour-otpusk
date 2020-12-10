@@ -19,6 +19,7 @@ SOURCES += src/Otpusk.cpp \
 
 DISTFILES += qml/Otpusk.qml \
     qml/cover/CoverPage.qml \
+    qml/pages/Search.qml \
     qml/pages/FirstPage.qml \
     rpm/Otpusk.changes.in \
     rpm/Otpusk.changes.run.in \
@@ -43,5 +44,6 @@ QT += network
 
 HEADERS += \
     api.h \
+    src/locationmodel.h \
     src/tourmodel.h \
     src/toursloader.h

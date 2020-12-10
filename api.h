@@ -20,7 +20,6 @@ class Api : public QObject
 public:
     Api(){
         networkManager = new QNetworkAccessManager(this);
-        connect(networkManager, &QNetworkAccessManager::finished, this, &Api::replyFinished);
     }
 
     void search(QUrl url, QJsonObject json) {
@@ -32,12 +31,18 @@ public:
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
-        networkManager->post(request, QJsonDocument(json).toJson());
+        searchReply = networkManager->post(request, QJsonDocument(json).toJson());
+        connect(searchReply, &QNetworkReply::finished, this, &Api::searchReplyFinished);
     }
 
-    void toursSuggest() {
-        QUrl url = QUrl("https://export.otpusk.com/api/tours/suggest");
+    void toursSuggest(QString text) {
+        // stop previous request
+        if(toursSuggestReply != NULL){
+            toursSuggestReply->abort();
+        }
+        QUrl url = QUrl("https://export.otpusk.com/api/tours/suggests");
         QUrlQuery query = QUrlQuery(url.query());
+        query.addQueryItem("text", text);
         query.addQueryItem("lang", "ukr");
         query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
         url.setQuery(query);
@@ -45,20 +50,28 @@ public:
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
-        QJsonObject json = QJsonObject();
-        json.insert(QString("text"), QJsonValue(QString("")));
-        networkManager->post(request, QJsonDocument(json).toJson());
-    }
-
-    void replyFinished(QNetworkReply *reply){
-        emit searchFinished(reply);
+        toursSuggestReply = networkManager->get(request);
+        connect(toursSuggestReply, &QNetworkReply::finished, this, &Api::toursSuggestReplyFinished);
     }
 
 private:
     QNetworkAccessManager *networkManager;
+    QNetworkReply *searchReply;
+    QNetworkReply *toursSuggestReply = NULL;
+
+    void searchReplyFinished(){
+        qDebug("search reply finished");
+        emit searchLoaded(searchReply);
+    }
+
+    void toursSuggestReplyFinished(){
+        qDebug("tours suggest reply finished");
+        emit toursSuggestLoaded(toursSuggestReply);
+    }
 
 signals:
-    void searchFinished(QNetworkReply*);
+    void searchLoaded(QNetworkReply*);
+    void toursSuggestLoaded(QNetworkReply*);
 
 };
 
