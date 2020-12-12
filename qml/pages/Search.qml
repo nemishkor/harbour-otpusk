@@ -30,7 +30,7 @@ Page {
 
     onStatusChanged: {
         if (status == PageStatus.Active && locationId === 0) {
-            pageStack.animatorPush(locationWizardPage)
+            pageStack.animatorPush(locationDialogPage)
         }
     }
 
@@ -43,7 +43,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: "Новий пошук"
-                onClicked: pageStack.animatorPush(locationWizardPage)
+                onClicked: pageStack.animatorPush(locationDialogPage)
             }
         }
 
@@ -65,7 +65,7 @@ Page {
                 ValueButton{
                     label: "Куди"
                     value: root.locationName
-                    onClicked: pageStack.animatorPush(locationWizardPage)
+                    onClicked: pageStack.animatorPush(locationDialogPage)
                 }
 
                 ComboBox {
@@ -151,91 +151,18 @@ Page {
                 }
 
                 Component {
-                    id: locationWizardPage
+                    id: locationDialogPage
 
-                    Dialog {
-                        id: locationWizardWizard
-
-                        property string searchString
-                        property int locationId
-                        property string locationName
-
-                        canAccept: locationId !== 0
-                        acceptDestination: root
-                        acceptDestinationAction: PageStackAction.Pop
-
-                        onAcceptPendingChanged: {
+                    LocationDialog{
+                        id: locationDialog
+                        dialog.acceptDestination: root
+                        dialog.acceptDestinationAction: PageStackAction.Pop
+                        dialog.onAcceptPendingChanged: {
                             if (acceptPending) {
-                                root.locationId = locationWizardWizard.locationId
-                                root.locationName = locationWizardWizard.locationName
+                                root.locationId = locationDialog.locationId
+                                root.locationName = locationDialog.locationName
                             }
                         }
-
-                        onSearchStringChanged: locationModel.update(searchString)
-                        Component.onCompleted: locationModel.update(searchString)
-
-                        Text {
-                            visible: locationModel.networkError !== ""
-                            anchors.bottom: parent.bottom
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottomMargin: Theme.paddingLarge
-                            width: parent.width - 2 * Theme.horizontalPageMargin
-                            x: Theme.horizontalPageMargin
-                            anchors.centerIn: parent
-                            text: locationModel.networkError
-                            color: Theme.errorColor
-                            font.pixelSize: Theme.fontSizeSmall
-                            wrapMode: Text.WrapAnywhere
-                        }
-
-                        SilicaListView {
-                            model: locationModel
-                            anchors.fill: parent
-                            currentIndex: -1 // otherwise currentItem will steal focus
-                            header:  SearchField {
-                                id: locationSearchField
-                                width: parent.width
-
-                                Binding {
-                                    target: locationWizardWizard
-                                    property: "searchString"
-                                    value: locationSearchField.text.toLowerCase().trim()
-                                }
-                            }
-
-                            delegate: BackgroundItem {
-                                id: backgroundItem
-                                highlighted: model.id === locationWizardWizard.locationId
-
-                                ListView.onAdd: AddAnimation {
-                                    target: backgroundItem
-                                }
-                                ListView.onRemove: RemoveAnimation {
-                                    target: backgroundItem
-                                }
-
-                                onClicked: {
-                                    locationWizardWizard.locationId=model.id
-                                    locationWizardWizard.locationName=model.name
-                                }
-
-                                Label {
-                                    x: Theme.horizontalPageMargin
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    color: searchString.length > 0 ? (highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor)
-                                                                   : (highlighted ? Theme.highlightColor : Theme.primaryColor)
-                                    textFormat: Text.StyledText
-                                    text: Theme.highlightText(model.name, searchString, Theme.highlightColor)
-                                    truncationMode: TruncationMode.Fade
-                                    wrapMode: "WordWrap"
-                                    width: parent.width - 2 * Theme.horizontalPageMargin
-                                }
-                            }
-
-                            VerticalScrollDecorator {}
-
-                        }
-
                     }
 
                 }
