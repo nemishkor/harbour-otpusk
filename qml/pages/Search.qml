@@ -14,7 +14,7 @@ Page {
     property bool selectedDates
 
     Component.onCompleted: {
-        fromCityId = 1544
+        fromCityId = 1544 // kyiv
         startDate = new Date()
         startDate.setDate(startDate.getDate() + 30)
         startDate.setHours(0)
@@ -57,15 +57,27 @@ Page {
                 width: parent.width
                 spacing: -Theme.paddingSmall
 
-//                SectionHeader {
-//                    x: Theme.horizontalPageMargin
-//                    text: qsTr("Location")
-//                }
-
                 ValueButton{
                     label: "Куди"
                     value: root.locationName
                     onClicked: pageStack.animatorPush(locationDialogPage)
+                }
+
+                Component {
+                    id: locationDialogPage
+
+                    LocationDialog{
+                        id: locationDialog
+                        dialog.acceptDestination: root
+                        dialog.acceptDestinationAction: PageStackAction.Pop
+                        dialog.onAcceptPendingChanged: {
+                            if (acceptPending) {
+                                root.locationId = locationDialog.locationId
+                                root.locationName = locationDialog.locationName
+                            }
+                        }
+                    }
+
                 }
 
                 ComboBox {
@@ -148,23 +160,6 @@ Page {
                         min: new Date()
                         date: new Date()
                     }
-                }
-
-                Component {
-                    id: locationDialogPage
-
-                    LocationDialog{
-                        id: locationDialog
-                        dialog.acceptDestination: root
-                        dialog.acceptDestinationAction: PageStackAction.Pop
-                        dialog.onAcceptPendingChanged: {
-                            if (acceptPending) {
-                                root.locationId = locationDialog.locationId
-                                root.locationName = locationDialog.locationName
-                            }
-                        }
-                    }
-
                 }
 
             }
