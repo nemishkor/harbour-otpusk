@@ -1,8 +1,38 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components"
 
 Page {
     id: root
+
+    property int locationId
+    property string locationName
+    property int fromCityId
+    property string fromCityName
+    property date startDate
+    property date endDate
+    property bool selectedDates
+
+    Component.onCompleted: {
+        fromCityId = 1544
+        startDate = new Date()
+        startDate.setDate(startDate.getDate() + 30)
+        startDate.setHours(0)
+        startDate.setMinutes(0)
+        startDate.setSeconds(0)
+        endDate = new Date()
+        endDate.setDate(endDate.getDate() + 37)
+        endDate.setHours(0)
+        endDate.setMinutes(0)
+        endDate.setSeconds(0)
+        selectedDates = false
+    }
+
+    onStatusChanged: {
+        if (status == PageStatus.Active && locationId === 0) {
+            pageStack.animatorPush(locationWizardPage)
+        }
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -10,47 +40,114 @@ Page {
 
         VerticalScrollDecorator {}
 
+        PullDownMenu {
+            MenuItem {
+                text: "Новий пошук"
+                onClicked: pageStack.animatorPush(locationWizardPage)
+            }
+        }
+
         Column {
             id: column
             width: parent.width
 
-            PageHeader { title: qsTr("Search") }
+            PageHeader { title: "Пошук турів" }
 
             Column {
                 width: parent.width
                 spacing: -Theme.paddingSmall
 
-                Button {
-                    id: wizard
+//                SectionHeader {
+//                    x: Theme.horizontalPageMargin
+//                    text: qsTr("Location")
+//                }
 
-                    property string location
-                    property string selection
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Setup parameters")
+                ValueButton{
+                    label: "Куди"
+                    value: root.locationName
                     onClicked: pageStack.animatorPush(locationWizardPage)
                 }
 
-                SectionHeader {
-                    x: Theme.horizontalPageMargin
-                    text: qsTr("Location")
+                ComboBox {
+                    currentIndex: 4
+                    label: "Місто відправлення"
+                    menu: ContextMenu {
+                        MenuItem { text: "Івано-Франківськ"; onClicked: root.fromCityId = 1760 }
+                        MenuItem { text: "Вінниця"; onClicked: root.fromCityId = 1934 }
+                        MenuItem { text: "Дніпро"; onClicked: root.fromCityId = 1874 }
+                        MenuItem { text: "Запоріжжя"; onClicked: root.fromCityId = 1875 }
+                        MenuItem { text: "Київ"; onClicked: root.fromCityId = 1544 }
+                        MenuItem { text: "Кривий Ріг"; onClicked: root.fromCityId = 1883 }
+                        MenuItem { text: "Луцьк"; onClicked: root.fromCityId = 2024 }
+                        MenuItem { text: "Львів"; onClicked: root.fromCityId = 1397 }
+                        MenuItem { text: "Миколаїв"; onClicked: root.fromCityId = 1963 }
+                        MenuItem { text: "Одеса"; onClicked: root.fromCityId = 1358 }
+                        MenuItem { text: "Полтава"; onClicked: root.fromCityId = 1952 }
+                        MenuItem { text: "Рівне"; onClicked: root.fromCityId = 1981 }
+                        MenuItem { text: "Суми"; onClicked: root.fromCityId = 1962 }
+                        MenuItem { text: "Ужгород"; onClicked: root.fromCityId = 1398 }
+                        MenuItem { text: "Харків"; onClicked: root.fromCityId = 1880 }
+                        MenuItem { text: "Херсон"; onClicked: root.fromCityId = 2012 }
+                        MenuItem { text: "Чернівці"; onClicked: root.fromCityId = 1708 }
+                    }
                 }
 
-                Label{
-                    x: Theme.horizontalPageMargin
-                    text: wizard.location
-                    color: Theme.highlightColor
+                ValueButton {
+                    id: datesButton
+                    width: parent.width
+                    label: "Дати туру"
+                    value: "вкажіть"
+                    onClicked: {
+                        pageStack.animatorPush(startDatePickerDialogPage, { date: root.startDate, min: root.startDate })
+                    }
                 }
 
-                SectionHeader {
-                    x: Theme.horizontalPageMargin
-                    text: qsTr("Selection")
+                Component{
+                    id: startDatePickerDialogPage
+
+                    DatePickerDialog{
+                        id: startDatePicker
+                        dialogAcceptDestination: endDatePickerDialogPage
+                        onAcceptPendingChanged: {
+                            if (acceptPending) {
+                                // Tell the destination page what the selected category is
+                                acceptDestinationInstance.dateStart = startDatePicker.date
+                                acceptDestinationInstance.dateStartText = startDatePicker.dateText
+                                acceptDestinationInstance.min = startDatePicker.date
+                                acceptDestinationInstance.date = startDatePicker.date
+                                acceptDestinationInstance.title = "Дата повернення"
+                                var max = startDatePicker.date
+                                max.setDate(max.getDate() + 14)
+                                acceptDestinationInstance.max = max
+                            }
+                        }
+                        title: "Дата вильоту"
+                    }
                 }
 
-                Label{
-                    x: Theme.horizontalPageMargin
-                    text: wizard.selection
-                    color: Theme.highlightColor
+                Component{
+                    id: endDatePickerDialogPage
+
+                    DatePickerDialog{
+                        id: endDatePicker
+                        property date dateStart
+                        property string dateStartText
+                        dialogAcceptDestination: root
+                        dialogAcceptDestinationAction: PageStackAction.Pop
+                        onAcceptPendingChanged: {
+                            console.log(acceptPending)
+                            if (acceptPending) {
+                                console.log(dateStartText)
+                                console.log(endDatePicker.dateText)
+                                datesButton.value = dateStartText + " - " + endDatePicker.dateText
+                                root.startDate = startDate
+                                root.endDate = endDatePicker.date
+                                root.selectedDates = true
+                            }
+                        }
+                        min: new Date()
+                        date: new Date()
+                    }
                 }
 
                 Component {
@@ -60,19 +157,22 @@ Page {
                         id: locationWizardWizard
 
                         property string searchString
-                        property int location: 0
+                        property int locationId
+                        property string locationName
 
-                        canAccept: location > 0
-                        acceptDestination: datesWizardPage
+                        canAccept: locationId !== 0
+                        acceptDestination: root
+                        acceptDestinationAction: PageStackAction.Pop
 
                         onAcceptPendingChanged: {
                             if (acceptPending) {
-                                // Tell the destination page what the selected category is
-                                acceptDestinationInstance.category = 'Fruit'
+                                root.locationId = locationWizardWizard.locationId
+                                root.locationName = locationWizardWizard.locationName
                             }
                         }
 
                         onSearchStringChanged: locationModel.update(searchString)
+                        Component.onCompleted: locationModel.update(searchString)
 
                         Text {
                             visible: locationModel.networkError !== ""
@@ -105,6 +205,7 @@ Page {
 
                             delegate: BackgroundItem {
                                 id: backgroundItem
+                                highlighted: model.id === locationWizardWizard.locationId
 
                                 ListView.onAdd: AddAnimation {
                                     target: backgroundItem
@@ -113,7 +214,10 @@ Page {
                                     target: backgroundItem
                                 }
 
-                                onClicked: locationWizardWizard.location=1
+                                onClicked: {
+                                    locationWizardWizard.locationId=model.id
+                                    locationWizardWizard.locationName=model.name
+                                }
 
                                 Label {
                                     x: Theme.horizontalPageMargin
@@ -121,7 +225,10 @@ Page {
                                     color: searchString.length > 0 ? (highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor)
                                                                    : (highlighted ? Theme.highlightColor : Theme.primaryColor)
                                     textFormat: Text.StyledText
-                                    text: Theme.highlightText(model.name, searchString, Theme.highlightColor) + ' [' + model.id + ']'
+                                    text: Theme.highlightText(model.name, searchString, Theme.highlightColor)
+                                    truncationMode: TruncationMode.Fade
+                                    wrapMode: "WordWrap"
+                                    width: parent.width - 2 * Theme.horizontalPageMargin
                                 }
                             }
 
@@ -129,173 +236,10 @@ Page {
 
                         }
 
-                        ListModel {
-                            id: listModel
-
-                            // copied under creative commons license from Wikipedia
-                            // http://en.wikipedia.org/wiki/List_of_sovereign_states
-                            property var countries: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
-                                "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
-                                "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
-                                "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-                                "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
-                                "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia",
-                                "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad",
-                                "Chile", "China", "Colombia", "Comoros", "Costa Rica",
-                                "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark",
-                                "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador",
-                                "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia",
-                                "Ethiopia", "Fiji", "Finland", "France", "Gabon",
-                                "Gambia", "Georgia", "Germany", "Ghana", "Greece",
-                                "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
-                                "Haiti", "Honduras", "Hungary", "Iceland", "India",
-                                "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
-                                "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
-                                "Kenya", "Kiribati", "Korea North", "Korea South", "Kuwait",
-                                "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho",
-                                "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
-                                "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives",
-                                "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius",
-                                "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
-                                "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru",
-                                "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger",
-                                "Nigeria", "Norway", "Oman", "Pakistan", "Palau",
-                                "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
-                                "Poland", "Portugal", "Qatar", "Romania", "Russia",
-                                "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa",
-                                "San Marino", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
-                                "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
-                                "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka",
-                                "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland",
-                                "Syria", "Tajikistan", "Tanzania", "Thailand", "Togo",
-                                "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-                                "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
-                                "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
-                                "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe",
-                                "Abkhazia", "Cook Islands", "Kosovo", "Nagorno-Karabakh", "Niue",
-                                "Northern Cyprus", "Palestine", "SADR", "Somaliland", "South Ossetia",
-                                "Taiwan"]
-
-                            function update() {
-                                var filteredCountries = countries.filter(function (country) { return country.toLowerCase().indexOf(searchString) !== -1 })
-
-                                var country
-                                var found
-                                var i
-
-                                // helper objects that can be quickly accessed
-                                var filteredCountryObject = new Object
-                                for (i = 0; i < filteredCountries.length; ++i) {
-                                    filteredCountryObject[filteredCountries[i]] = true
-                                }
-                                var existingCountryObject = new Object
-                                for (i = 0; i < count; ++i) {
-                                    country = get(i).text
-                                    existingCountryObject[country] = true
-                                }
-
-                                // remove items no longer in filtered set
-                                i = 0
-                                while (i < count) {
-                                    country = get(i).text
-                                    found = filteredCountryObject.hasOwnProperty(country)
-                                    if (!found) {
-                                        remove(i)
-                                    } else {
-                                        i++
-                                    }
-                                }
-
-                                // add new items
-                                for (i = 0; i < filteredCountries.length; ++i) {
-                                    country = filteredCountries[i]
-                                    found = existingCountryObject.hasOwnProperty(country)
-                                    if (!found) {
-                                        // for simplicity, just adding to end instead of corresponding position in original list
-                                        append({ "text": country})
-                                    }
-                                }
-                            }
-                        }
-
                     }
 
                 }
 
-                Component {
-                    id: datesWizardPage
-
-                    Dialog {
-                        canAccept: selector.currentIndex >= 0
-                        acceptDestination: root
-                        acceptDestinationAction: PageStackAction.Pop
-
-                        property string category
-
-                        ListModel {
-                            id: fruitModel
-                            ListElement {
-                                name: 'Apple'
-                            }
-                            ListElement {
-                                name: 'Banana'
-                            }
-                            ListElement {
-                                name: 'Cantaloupe'
-                            }
-                        }
-
-                        ListModel {
-                            id: vegetableModel
-                            ListElement {
-                                name: 'Asparagus'
-                            }
-                            ListElement {
-                                name: 'Broccoli'
-                            }
-                            ListElement {
-                                name: 'Carrot'
-                            }
-                        }
-
-                        Flickable {
-                            // ComboBox requires a flickable ancestor
-                            width: parent.width
-                            height: parent.height
-                            interactive: false
-
-                            Column {
-                                width: parent.width
-
-                                DialogHeader {
-                                    title: "Select " + category.toLowerCase()
-                                }
-
-                                ComboBox {
-                                    id: selector
-
-                                    width: parent.width
-                                    label: 'Selection:'
-                                    currentIndex: -1
-
-                                    menu: ContextMenu {
-                                        Repeater {
-                                            model: category === 'Fruit' ? fruitModel : vegetableModel
-
-                                            MenuItem {
-                                                text: modelData
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        onAccepted: {
-                            wizard.selection = selector.value
-                        }
-                    }
-                }
             }
 
         }

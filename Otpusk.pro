@@ -18,6 +18,7 @@ SOURCES += src/Otpusk.cpp \
     src/tourmodel.cpp
 
 DISTFILES += qml/Otpusk.qml \
+    qml/components/DatePickerDialog.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Search.qml \
     qml/pages/FirstPage.qml \
