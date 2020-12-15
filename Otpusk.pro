@@ -15,6 +15,8 @@ TARGET = Otpusk
 CONFIG += sailfishapp
 
 SOURCES += src/Otpusk.cpp \
+    src/datesmodel.cpp \
+    src/locationmodel.cpp \
     src/tourmodel.cpp
 
 DISTFILES += qml/Otpusk.qml \
@@ -45,6 +47,7 @@ QT += network
 
 HEADERS += \
     api.h \
+    src/datesmodel.h \
     src/locationmodel.h \
     src/tourmodel.h \
     src/toursloader.h

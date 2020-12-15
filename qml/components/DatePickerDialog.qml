@@ -6,6 +6,7 @@ Dialog{
     property var dialogAcceptDestination
     property var dialogOnAcceptPendingChanged
     property int dialogAcceptDestinationAction: PageStackAction.Push
+    property var allowedDates: ["2020-12-17", "2020-12-18", "2020-12-21"]
     property date min
     property date max
     property string title
@@ -36,6 +37,31 @@ Dialog{
                     width: datePicker.cellWidth
                     height: datePicker.cellHeight
 
+                    function isAllowedDateToSelect(date){
+                        if(
+                                min.toString() !== "Invalid Date" && date < min ||
+                                max.toString() !== "Invalid Date" && date > max
+                        ){
+                            return false
+                        }
+                        var month = date.getMonth() + 1
+                        if(month < 10){
+                            month = '0' + month
+                        }
+                        var day = date.getDate()
+                        if(day < 10){
+                            day = '0' + day
+                        }
+                        var dateString = date.getFullYear() + '-' + month + '-' + day
+                        console.log('Check')
+                        console.log(dateString)
+                        console.log(allowedDates.indexOf(dateString))
+                        if(allowedDates.indexOf(dateString) === -1){
+                            return false;
+                        }
+                        return true;
+                    }
+
                     Label {
                         anchors.centerIn: parent
                         text: model.day.toLocaleString()
@@ -46,17 +72,14 @@ Dialog{
                             if (pressed && containsMouse) {
                                 return palette.highlightColor
                             }
-                            if (model.month === model.primaryMonth) {
-                                var date = new Date(model.year, model.month-1, model.day,12,0,0)
-                                if(min.toString() !== "Invalid Date" && date < min){
-                                    return palette.secondaryColor
-                                }
-                                if(max.toString() !== "Invalid Date" && date > max){
-                                    return palette.secondaryColor
-                                }
-                                return palette.primaryColor
+                            if (model.month !== model.primaryMonth) {
+                                return palette.secondaryColor
                             }
-                            return palette.secondaryColor
+                            var date = new Date(model.year, model.month-1, model.day,12,0,0)
+                            if(isAllowedDateToSelect(date)){
+                                return palette.highlightColor
+                            }
+                            return palette.primaryColor
                         }
                     }
 
@@ -70,13 +93,11 @@ Dialog{
                     onContainsMouseChanged: updateHighlight()
                     onClicked: {
                         var selectedDate = new Date(model.year, model.month-1, model.day,12,0,0)
-                        if(min.toString() !== "Invalid Date" && selectedDate < min){
-                            return
+                        var allowed = isAllowedDateToSelect(selectedDate)
+                        console.log("allowed " + allowed)
+                        if(allowed){
+                            datePicker.date = selectedDate
                         }
-                        if(max.toString() !== "Invalid Date" && selectedDate > max){
-                            return
-                        }
-                        datePicker.date = selectedDate
                     }
                 }
             }

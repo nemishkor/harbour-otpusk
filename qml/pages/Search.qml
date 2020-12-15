@@ -12,6 +12,7 @@ Page {
     property date startDate
     property date endDate
     property bool selectedDates
+    property bool length
 
     Component.onCompleted: {
         fromCityId = 1544 // kyiv
@@ -32,6 +33,10 @@ Page {
         if (status == PageStatus.Active && locationId === 0) {
             pageStack.animatorPush(locationDialogPage)
         }
+    }
+
+    onLocationIdChanged: {
+        searchDatesModel.update(locationId)
     }
 
     SilicaFlickable {
@@ -159,6 +164,32 @@ Page {
                         }
                         min: new Date()
                         date: new Date()
+                    }
+                }
+
+                ValueButton{
+                    label: "Тривалість подорожі"
+                    value: length
+                    onClicked: pageStack.animatorPush(legthDialogPage)
+                }
+
+                Component{
+                    id: lenthDialogPage
+
+                    Dialog{
+                        id: lengthDialog
+                        Column{
+                            width: parent.width
+                            SilicaListView{
+                                model: searchDatesModel
+                                delegate: ListItem{
+                                    Label{
+                                        x: Theme.pageStackIndicatorWidth
+                                        text: model.length
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 

@@ -54,10 +54,29 @@ public:
         connect(toursSuggestReply, &QNetworkReply::finished, this, &Api::toursSuggestReplyFinished);
     }
 
+    void dates(int locationId) {
+        // stop previous request
+        if(datesReply != NULL){
+            datesReply->abort();
+        }
+        QUrl url = QUrl("https://export.otpusk.com/api/tours/dates");
+        QUrlQuery query = QUrlQuery(url.query());
+        query.addQueryItem("to", QString::number(locationId));
+        query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
+        url.setQuery(query);
+        qDebug(qPrintable(url.toString()));
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
+        datesReply = networkManager->get(request);
+        connect(datesReply, &QNetworkReply::finished, this, &Api::datesReplyFinished);
+    }
+
 private:
     QNetworkAccessManager *networkManager;
     QNetworkReply *searchReply;
     QNetworkReply *toursSuggestReply = NULL;
+    QNetworkReply *datesReply = NULL;
 
     void searchReplyFinished(){
         qDebug("search reply finished");
@@ -69,9 +88,16 @@ private:
         emit toursSuggestLoaded(toursSuggestReply);
     }
 
+    void datesReplyFinished(){
+        qDebug("dates reply finished");
+        emit datesLoaded(datesReply);
+    }
+
 signals:
     void searchLoaded(QNetworkReply*);
     void toursSuggestLoaded(QNetworkReply*);
+    void datesLoaded(QNetworkReply*);
+
 
 };
 

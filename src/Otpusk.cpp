@@ -8,6 +8,7 @@
 #include "toursloader.h"
 #include "tourmodel.h"
 #include "locationmodel.h"
+#include "datesmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +32,8 @@ int main(int argc, char *argv[])
     context->setContextProperty("api", &api);
     LocationModel locationModel(&api);
     context->setContextProperty("locationModel", &locationModel);
+    SearchDatesModel searchDatesModel(&api);
+    context->setContextProperty("searchDatesModel", &searchDatesModel);
     ToursLoader toursLoader(&api);
     context->setContextProperty("toursLoader", &toursLoader);
 
