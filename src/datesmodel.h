@@ -26,6 +26,8 @@ class SearchDatesModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QString networkError READ getNetworkError NOTIFY networkErrorChanged)
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(QStringList dates READ dates NOTIFY datesChanged)
 
 public:
     enum SearchDateRoles {
@@ -38,6 +40,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Q_INVOKABLE void update(int location);
     QString getNetworkError() const;
+    QStringList dates();
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -45,6 +48,7 @@ protected:
 private:
     Api *mApi;
     QList<SearchDate> mItems;
+    QStringList mDates;
     QString networkError;
 
 private slots:
@@ -52,6 +56,8 @@ private slots:
 
 signals:
   void networkErrorChanged();
+  void countChanged();
+  void datesChanged();
 };
 
 #endif // DATESMODEL_H

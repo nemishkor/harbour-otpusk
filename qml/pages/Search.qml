@@ -112,11 +112,21 @@ Page {
                 ValueButton {
                     id: datesButton
                     width: parent.width
+                    visible: searchDatesModel.count > 0
                     label: "Дати туру"
                     value: "вкажіть"
                     onClicked: {
                         pageStack.animatorPush(startDatePickerDialogPage, { date: root.startDate, min: root.startDate })
                     }
+                }
+
+                Label{
+                    visible: searchDatesModel.count === 0
+                    x: Theme.horizontalPageMargin
+                    width: parent.width - 2 * Theme.horizontalPageMargin
+                    text: "Не знайдено доступних дат для вибраної локації"
+                    color: Theme.errorColor
+                    wrapMode: "WordWrap"
                 }
 
                 Component{

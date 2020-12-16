@@ -6,7 +6,7 @@ Dialog{
     property var dialogAcceptDestination
     property var dialogOnAcceptPendingChanged
     property int dialogAcceptDestinationAction: PageStackAction.Push
-    property var allowedDates: ["2020-12-17", "2020-12-18", "2020-12-21"]
+    property var allowedDates: searchDatesModel.dates
     property date min
     property date max
     property string title
@@ -92,6 +92,7 @@ Dialog{
                     onPressedChanged: updateHighlight()
                     onContainsMouseChanged: updateHighlight()
                     onClicked: {
+                        console.log(allowedDates)
                         var selectedDate = new Date(model.year, model.month-1, model.day,12,0,0)
                         var allowed = isAllowedDateToSelect(selectedDate)
                         console.log("allowed " + allowed)

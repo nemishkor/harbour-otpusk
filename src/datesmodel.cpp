@@ -40,6 +40,11 @@ QString SearchDatesModel::getNetworkError() const
     return networkError;
 }
 
+QStringList SearchDatesModel::dates()
+{
+    return mDates;
+}
+
 
 QHash<int, QByteArray> SearchDatesModel::roleNames() const {
     QHash<int, QByteArray> roles;
@@ -61,15 +66,19 @@ void SearchDatesModel::updateFromApiReply(QNetworkReply *reply){
     }
     QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
     qDebug(qPrintable(json.toJson()));
-    QJsonObject response = json.object()["response"].toObject();
-//    QJsonObject::const_iterator i;
-//    mItems.clear();
-//    beginInsertRows(QModelIndex(), 0, response.size());
-//    for (i = response.constBegin(); i != response.end(); ++i){
-//        QJsonObject result = (*i).toObject();
-//        qDebug("append item");
-//        mItems.append(SearchDate(result["id"].toString().toInt(), result["name"].toString()));
-//    }
-//      qDebug("iserted " + QString::number(mItems.count()).toLatin1() + " locations");
-//    endInsertRows();
+    QJsonObject dates = json.object()["dates"].toObject();
+    mDates.clear();
+    mItems.clear();
+    QJsonObject::const_iterator i;
+    beginInsertRows(QModelIndex(), 0, dates.size());
+    for (i = dates.constBegin(); i != dates.end(); ++i){
+        QJsonObject result = (*i).toObject();
+//        qDebug(date.toLatin1());
+        mItems.append(SearchDate(i.key(), i.value().toString()));
+        mDates.append(i.key());
+    }
+    endInsertRows();
+    qDebug(QString::number(mItems.size()).append(" dates appended").toLatin1());
+    emit countChanged();
+    emit datesChanged();
 }
