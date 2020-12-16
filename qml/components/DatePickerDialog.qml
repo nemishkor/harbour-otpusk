@@ -53,9 +53,6 @@ Dialog{
                             day = '0' + day
                         }
                         var dateString = date.getFullYear() + '-' + month + '-' + day
-                        console.log('Check')
-                        console.log(dateString)
-                        console.log(allowedDates.indexOf(dateString))
                         if(allowedDates.indexOf(dateString) === -1){
                             return false;
                         }
@@ -95,7 +92,6 @@ Dialog{
                         console.log(allowedDates)
                         var selectedDate = new Date(model.year, model.month-1, model.day,12,0,0)
                         var allowed = isAllowedDateToSelect(selectedDate)
-                        console.log("allowed " + allowed)
                         if(allowed){
                             datePicker.date = selectedDate
                         }
