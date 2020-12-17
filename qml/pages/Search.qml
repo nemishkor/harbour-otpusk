@@ -12,7 +12,7 @@ Page {
     property date startDate
     property date endDate
     property bool selectedDates
-    property bool length
+    property int length
 
     Component.onCompleted: {
         fromCityId = 1544 // kyiv
@@ -27,6 +27,7 @@ Page {
         endDate.setMinutes(0)
         endDate.setSeconds(0)
         selectedDates = false
+        length = 0
     }
 
     onStatusChanged: {
@@ -164,12 +165,22 @@ Page {
                         onAcceptPendingChanged: {
                             console.log(acceptPending)
                             if (acceptPending) {
-                                console.log(dateStartText)
-                                console.log(endDatePicker.dateText)
+
+//                                console.log(dateStartText)
+//                                console.log(endDatePicker.dateText)
                                 datesButton.value = dateStartText + " - " + endDatePicker.dateText
-                                root.startDate = startDate
+                                root.startDate = dateStart
                                 root.endDate = endDatePicker.date
                                 root.selectedDates = true
+
+                                var day = dateStart.getDate()
+                                if(day < 10)
+                                    day = "0" + day
+                                var month = startDate.getMonth() + 1
+                                if(month < 10)
+                                    month = "0" + month
+                                searchDatesModel.selectDate(dateStart.getFullYear() + "-" + month + "-" + day)
+
                             }
                         }
                         min: new Date()
@@ -179,24 +190,42 @@ Page {
 
                 ValueButton{
                     label: "Тривалість подорожі"
-                    value: length
-                    onClicked: pageStack.animatorPush(legthDialogPage)
+                    value: length === 0 ? "вкажіть" : (length + " днів / " + (length - 1) + " ночей")
+                    onClicked: pageStack.animatorPush(lengthDialogPage)
                 }
 
                 Component{
-                    id: lenthDialogPage
+                    id: lengthDialogPage
 
                     Dialog{
                         id: lengthDialog
-                        Column{
+                        property int length
+                        onAcceptPendingChanged: {
+                            if (acceptPending) {
+                                root.length = lengthDialog.length
+                            }
+                        }
+                        DialogHeader {
+                            id: lengthDialogHeader
+                            title: "Тривалість туру"
+                        }
+                        SilicaListView{
+                            anchors.top: lengthDialogHeader.bottom
+                            anchors.bottom: parent.bottom
                             width: parent.width
-                            SilicaListView{
-                                model: searchDatesModel
-                                delegate: ListItem{
-                                    Label{
-                                        x: Theme.pageStackIndicatorWidth
-                                        text: model.length
-                                    }
+                            model: searchDatesModel.lengths
+                            delegate: BackgroundItem {
+                                highlighted: Number(modelData) === lengthDialog.length
+                                onClicked: {
+                                    console.log("clicked")
+                                    lengthDialog.length=Number(modelData)
+                                    console.log(modelData)
+                                    console.log(searchDatesModel.lengths)
+                                }
+                                Label{
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    x: Theme.pageStackIndicatorWidth
+                                    text: modelData + " днів / " + (modelData - 1) + " ночей"
                                 }
                             }
                         }

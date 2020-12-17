@@ -30,10 +30,15 @@ int main(int argc, char *argv[])
 
     Api api;
     context->setContextProperty("api", &api);
+
     LocationModel locationModel(&api);
     context->setContextProperty("locationModel", &locationModel);
+
     SearchDatesModel searchDatesModel(&api);
+//    QObject *rootObject = view->rootObject();
+//    QObject::connect(rootObject, SIGNAL(qmlSignal(QString)), &searchDatesModel, SLOT(cppSlot(QString)));
     context->setContextProperty("searchDatesModel", &searchDatesModel);
+
     ToursLoader toursLoader(&api);
     context->setContextProperty("toursLoader", &toursLoader);
 
