@@ -59,7 +59,7 @@ Page {
             id: column
             width: parent.width
 
-            PageHeader { title: "Пошук турів" }
+            PageHeader { title: "Новий пошук" }
 
             Column {
                 width: parent.width
