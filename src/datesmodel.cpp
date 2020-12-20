@@ -30,24 +30,6 @@ QVariant SearchDatesModel::data(const QModelIndex &index, int role) const
 
 void SearchDatesModel::update(int location)
 {
-
-    mDates.clear();
-    mItems.clear();
-
-    beginInsertRows(QModelIndex(), 0, 2);
-
-    mItems.append(SearchDate("2020-12-18", QString("3,5").split(QChar(','))));
-    mDates.append("2020-12-18");
-
-    mItems.append(SearchDate("2020-12-20", QString("8,9").split(QChar(','))));
-    mDates.append("2020-12-20");
-
-    endInsertRows();
-    qDebug(QString::number(mItems.size()).append(" dates appended").toLatin1());
-    emit countChanged();
-    emit datesChanged();
-
-    return;
     networkError = QString("");
     emit networkErrorChanged();
     mApi->dates(location);
@@ -106,14 +88,16 @@ void SearchDatesModel::updateFromApiReply(QNetworkReply *reply){
     QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
     qDebug(qPrintable(json.toJson()));
     QJsonObject dates = json.object()["dates"].toObject();
+    qDebug(QString::number(dates.size()).append(" dates received from API").toLatin1());
     mDates.clear();
     mItems.clear();
     QJsonObject::const_iterator i;
     beginInsertRows(QModelIndex(), 0, dates.size());
     for (i = dates.constBegin(); i != dates.end(); ++i){
         QJsonObject result = (*i).toObject();
-//        qDebug(date.toLatin1());
-        mItems.append(SearchDate(i.key(), i.value().toString().split(QChar(','))));
+        QString date = i.key();
+        qDebug(QString(date).prepend("Added date ").toLatin1());
+        mItems.append(SearchDate(date, i.value().toString().split(QChar(','))));
         mDates.append(i.key());
     }
     endInsertRows();

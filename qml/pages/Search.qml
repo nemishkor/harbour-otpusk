@@ -13,6 +13,8 @@ Page {
     property date endDate
     property bool selectedDates
     property int length
+    property int adults
+    property var children
 
     Component.onCompleted: {
         fromCityId = 1544 // kyiv
@@ -114,7 +116,7 @@ Page {
                     id: datesButton
                     width: parent.width
                     visible: searchDatesModel.count > 0
-                    label: "Дати туру"
+                    label: "Початок туру"
                     value: "вкажіть"
                     onClicked: {
                         pageStack.animatorPush(startDatePickerDialogPage, { date: root.startDate, min: root.startDate })
@@ -230,6 +232,211 @@ Page {
                             }
                         }
                     }
+                }
+
+                Row{
+                    width: parent.width
+
+                    ComboBox {
+                        currentIndex: 1
+                        label: "Дорослі"
+                        width: parent.width / 2
+                        menu: ContextMenu {
+                            MenuItem { text: "1"; onClicked: root.adults = 1 }
+                            MenuItem { text: "2"; onClicked: root.adults = 2 }
+                            MenuItem { text: "3"; onClicked: root.adults = 3 }
+                            MenuItem { text: "4"; onClicked: root.adults = 4 }
+                            MenuItem { text: "5"; onClicked: root.adults = 5 }
+                            MenuItem { text: "6"; onClicked: root.adults = 6 }
+                            MenuItem { text: "7"; onClicked: root.adults = 7 }
+                            MenuItem { text: "8"; onClicked: root.adults = 8 }
+                        }
+                    }
+                    ValueButton {
+                        id: childrenButton
+                        width: parent.width
+                        label: "Діти"
+                        value: "вкажіть"
+                        onClicked: {
+                            pageStack.animatorPush(childrenDialogComponent)
+                        }
+                    }
+                    Component{
+                        id: childrenDialogComponent
+
+                        Dialog{
+                            id: childrenDialog
+                            property int child1: 2
+                            property int child2: 4
+                            property int child3: 0
+                            property int child4: 0
+                            onAcceptPendingChanged: {
+                                if (acceptPending) {
+                                    var ages = []
+                                    if(child1 > 0)
+                                        ages.push(child1)
+                                    if(child2 > 0)
+                                        ages.push(child2)
+                                    if(child3 > 0)
+                                        ages.push(child3)
+                                    if(child4 > 0)
+                                        ages.push(child4)
+                                    root.children = childrenDialog.ages
+                                    childrenButton.value = ages.length > 0 ? ( ages.length + " (" + ages.join(', ') + ")" ) : '-'
+                                }
+                            }
+
+                            DialogHeader {
+                                id: childrenDialogHeader
+                                title: "Вік дітей"
+                            }
+
+                            function yearsSuffix(age){
+                                if(age === 1)
+                                    return " рік"
+                                if(age > 1 && age < 5)
+                                    return " роки"
+                                return " років"
+                            }
+
+                            function addChild(age){
+                                if(child1 === 0){
+                                    child1 = age
+                                    return
+                                }
+                                if(child2 === 0){
+                                    child2 = age
+                                    return
+                                }
+                                if(child3 === 0){
+                                    child3 = age
+                                    return
+                                }
+                                if(child4 === 0){
+                                    child4 = age
+                                    return
+                                }
+                            }
+
+                            Column{
+                                id: childrenDialogColumn
+                                anchors.top: childrenDialogHeader.bottom
+                                anchors.bottom: parent.bottom
+                                width: parent.width
+                                spacing: Theme.paddingLarge
+
+                                IconButton {
+                                    id: removeChild1
+                                    icon.source: "image://theme/icon-m-cancel"
+                                    onClicked: childrenDialog.child1 = 0
+                                    visible: childrenDialog.child1 > 0
+                                    Label{
+                                        anchors.left: removeChild1.right
+                                        anchors.verticalCenter: removeChild1.verticalCenter
+                                        text: childrenDialog.child1 + childrenDialog.yearsSuffix(childrenDialog.child1)
+                                    }
+                                }
+
+                                IconButton {
+                                    id: removeChild2
+                                    icon.source: "image://theme/icon-m-cancel"
+                                    onClicked: childrenDialog.child2 = 0
+                                    visible: childrenDialog.child2 > 0
+                                    Label{
+                                        anchors.left: removeChild2.right
+                                        anchors.verticalCenter: removeChild2.verticalCenter
+                                        text: childrenDialog.child2 + childrenDialog.yearsSuffix(childrenDialog.child2)
+                                    }
+                                }
+
+                                IconButton {
+                                    id: removeChild3
+                                    icon.source: "image://theme/icon-m-cancel"
+                                    onClicked: childrenDialog.child3 = 0
+                                    visible: childrenDialog.child3 > 0
+                                    Label{
+                                        anchors.left: removeChild3.right
+                                        anchors.verticalCenter: removeChild3.verticalCenter
+                                        text: childrenDialog.child3 + childrenDialog.yearsSuffix(childrenDialog.child3)
+                                    }
+                                }
+
+                                IconButton {
+                                    id: removeChild4
+                                    icon.source: "image://theme/icon-m-cancel"
+                                    onClicked: childrenDialog.child4 = 0
+                                    visible: childrenDialog.child4 > 0
+                                    Label{
+                                        anchors.left: removeChild4.right
+                                        anchors.verticalCenter: removeChild4.verticalCenter
+                                        text: childrenDialog.child4 + childrenDialog.yearsSuffix(childrenDialog.child4)
+                                    }
+                                }
+
+                                ButtonLayout {
+                                    preferredWidth: Theme.buttonWidthMedium
+                                    Button {
+                                        visible: childrenDialog.child1 === 0 || childrenDialog.child2 === 0 || childrenDialog.child3 === 0 || childrenDialog.child4 === 0
+                                        text: "Додати"
+                                        onClicked: pageStack.push(addChildDialogComponent)
+                                    }
+                                    Component {
+                                        id: addChildDialogComponent
+
+                                        Page {
+
+                                            SilicaListView {
+                                                anchors.fill: parent
+                                                model: ListModel{
+                                                    ListElement{ age: 1 }
+                                                    ListElement{ age: 2 }
+                                                    ListElement{ age: 3 }
+                                                    ListElement{ age: 4 }
+                                                    ListElement{ age: 5 }
+                                                    ListElement{ age: 6 }
+                                                    ListElement{ age: 7 }
+                                                    ListElement{ age: 8 }
+                                                    ListElement{ age: 9 }
+                                                    ListElement{ age: 10 }
+                                                    ListElement{ age: 11 }
+                                                    ListElement{ age: 12 }
+                                                    ListElement{ age: 13 }
+                                                    ListElement{ age: 14 }
+                                                    ListElement{ age: 15 }
+                                                    ListElement{ age: 16 }
+                                                }
+
+                                                header: PageHeader {
+                                                    title: "Додати дитину"
+                                                }
+
+                                                delegate: BackgroundItem {
+                                                    id: delegateItem
+
+                                                    onClicked: {
+                                                        childrenDialog.addChild(age)
+                                                        pageStack.pop()
+                                                    }
+
+                                                    Label {
+                                                        x: Theme.horizontalPageMargin
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        width: parent.width - x*2
+                                                        wrapMode: Text.Wrap
+                                                        text: model.age + childrenDialog.yearsSuffix(model.age)
+                                                        highlighted: delegateItem.highlighted
+                                                    }
+                                                }
+                                                VerticalScrollDecorator {}
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
                 }
 
             }
