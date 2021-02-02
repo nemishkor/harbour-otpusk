@@ -105,20 +105,32 @@ Page {
                             color: Theme.highlightColor
                             text: name
 
+                            Component.onCompleted: console.log(ratingCount)
+
                             ProgressCircle {
                                 id: progressCircle
                                 anchors.left: parent.right
                                 anchors.top: parent.top
                                 progressValue: ratingAvarage / 10
-                                progressColor: ratingAvarage > 6 ? "#8051D511" : (ratingAvarage > 4 ? "#80DEB321" : "#80EC4713")
+                                backgroundColor: "#80000000"
+                                progressColor: {
+                                    if(ratingAvarage === 0)
+                                        return "#807B7B7B"
+                                    if(ratingAvarage > 6)
+                                        return "#8051D511"
+                                    if(ratingAvarage > 4)
+                                        return "#80DEB321"
+                                    return "#80EC4713"
+                                }
                                 Label{
                                     anchors.fill: parent
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignHCenter
-                                    text: ratingCount
+                                    text: ratingCount > 0 ? ratingCount : "-"
                                     font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
                                 }
                                 Label{
+                                    visible: ratingCount > 0
                                     anchors.top: parent.bottom
                                     anchors.left: parent.left
                                     anchors.right: parent.right
@@ -146,7 +158,20 @@ Page {
                                 anchors.baseline: priceUahLabel.baseline
                                 font.pixelSize: Theme.fontSizeMedium
                                 color: Theme.secondaryColor
-                                text: price + currency
+                                text: {
+                                    var t = price
+                                    switch(currency){
+                                    case "eur":
+                                        t += "€"
+                                        break;
+                                    case "usd":
+                                        t += "$"
+                                        break;
+                                    default:
+                                        t += currency
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

@@ -167,7 +167,7 @@ private slots:
                                 hotel["c"].toObject()["n"].toString(),
                                 hotel["t"].toObject()["n"].toString(),
                                 hotel["r"].toDouble(),
-                                hotel["v"].toString().toInt(),
+                                hotel["v"].toInt(),
                                 hotel["p"].toDouble(),
                                 hotel["po"].toDouble(),
                                 hotel["pu"].toString()));
