@@ -9,6 +9,7 @@
 #include "tourmodel.h"
 #include "locationmodel.h"
 #include "datesmodel.h"
+#include "searchparameters.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +39,9 @@ int main(int argc, char *argv[])
 //    QObject *rootObject = view->rootObject();
 //    QObject::connect(rootObject, SIGNAL(qmlSignal(QString)), &searchDatesModel, SLOT(cppSlot(QString)));
     context->setContextProperty("searchDatesModel", &searchDatesModel);
+
+    SearchParameters searchParameters(nullptr);
+    context->setContextProperty("searchParameters", &searchParameters);
 
     ToursLoader toursLoader(&api);
     context->setContextProperty("toursLoader", &toursLoader);

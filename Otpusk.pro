@@ -15,6 +15,7 @@ TARGET = Otpusk
 CONFIG += sailfishapp
 
 SOURCES += src/Otpusk.cpp \
+    searchparameters.cpp \
     src/datesmodel.cpp \
     src/locationmodel.cpp \
     src/tourmodel.cpp
@@ -23,8 +24,8 @@ DISTFILES += qml/Otpusk.qml \
     qml/components/DatePickerDialog.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Home.qml \
-    qml/pages/FirstPage.qml \
     qml/pages/SearchForm.qml \
+    qml/pages/SearchResults.qml \
     rpm/Otpusk.changes.in \
     rpm/Otpusk.changes.run.in \
     rpm/Otpusk.spec \
@@ -48,6 +49,7 @@ QT += network
 
 HEADERS += \
     api.h \
+    searchparameters.h \
     src/datesmodel.h \
     src/locationmodel.h \
     src/tourmodel.h \

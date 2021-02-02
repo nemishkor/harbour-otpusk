@@ -13,10 +13,6 @@ Dialog{
     property alias dateText: datePicker.dateText
     property alias date: datePicker.date
 
-    Component.onCompleted: {
-        console.log(min)
-    }
-
     acceptDestination: dialogAcceptDestination
     onAcceptPendingChanged: dialogOnAcceptPendingChanged
     acceptDestinationAction: dialogAcceptDestinationAction

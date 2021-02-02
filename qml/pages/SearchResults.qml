@@ -4,20 +4,40 @@ import Sailfish.Silica 1.0
 Page {
     id: page
 
+    onStatusChanged: {
+        if (status == PageStatus.Active) {
+            toursLoader.load(searchParameters)
+        }
+    }
+
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
+
+    InteractionHintLabel {
+        id: hintLabel
+        visible: !toursLoader.loading && !toursLoader.replyFailed && toursLoader.total === 0
+        anchors.bottom: parent.bottom
+        opacity: 1.0
+        Behavior on opacity { FadeAnimation {} }
+        text: "За вашим запитом турів не знайдено. Спробуйте змінити дату початку туру чи вибрати інший напрямок"
+        onVisibleChanged: {
+            if(visible){
+                hint.start()
+            } else {
+                hint.stop()
+            }
+        }
+    }
+    TouchInteractionHint {
+        id: hint
+        interactionMode: TouchInteraction.Swipe
+        direction: TouchInteraction.Right
+        loops: Animation.Infinite
+    }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
-
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Search")
-                onClicked: toursLoader.load()
-            }
-        }
 
         // Tell SilicaFlickable the height of its content.
         contentHeight: parent.height
@@ -45,15 +65,6 @@ Page {
                 color: Theme.errorColor
                 font.pixelSize: Theme.fontSizeMedium
                 wrapMode: "WordWrap"
-            }
-            Label{
-                visible: !toursLoader.loading && !toursLoader.replyFailed && toursLoader.total === 0
-                x: Theme.horizontalPageMargin
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                text: "Nothing found. Change search parameters"
-                wrapMode: "WordWrap"
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeLarge
             }
             ProgressBar{
                 id: progressBar
@@ -157,6 +168,7 @@ Page {
 
         }
 
+        VerticalScrollDecorator {}
     }
 
     Rectangle{

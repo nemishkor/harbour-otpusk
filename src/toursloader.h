@@ -10,6 +10,7 @@
 #include <QList>
 #include "api.h"
 #include "tourmodel.h"
+#include "searchparameters.h"
 
 class ToursLoader : public QObject
 {
@@ -27,9 +28,10 @@ public:
         connect(api, SIGNAL(searchLoaded(QNetworkReply*)), this, SLOT(handleSearchReply(QNetworkReply*)));
     }
 
-    Q_INVOKABLE void load(){
+    Q_INVOKABLE void load(SearchParameters *searchParameters){
         requestNumber = 0;
         setLoading(true);
+        currentSearchParameters = searchParameters;
         sendSearchRequest();
     }
 
@@ -47,9 +49,12 @@ public:
     void sendSearchRequest(){
         QUrl url = QUrl("https://export.otpusk.com/api/tours/search");
         QUrlQuery query = QUrlQuery(url.query());
-        query.addQueryItem("to", "43");
-        query.addQueryItem("checkIn", "2021-03-20");
-        query.addQueryItem("checkOut", "2021-03-30");
+        query.addQueryItem("to", QString::number(currentSearchParameters->getLocationId()));
+        query.addQueryItem("checkIn", currentSearchParameters->getStartDate());
+        query.addQueryItem("checkOut", currentSearchParameters->getEndDate());
+        if(currentSearchParameters->getFromCityId() > 0){
+
+        }
         query.addQueryItem("number", QString::number(requestNumber));
         url.setQuery(query);
         api->search(url, QJsonObject());
@@ -123,6 +128,7 @@ private:
     bool loading = false;
     bool replyFailed = false;
     QString replyErrorText;
+    SearchParameters *currentSearchParameters;
 
 private slots:
     void handleSearchReply(QNetworkReply *reply){

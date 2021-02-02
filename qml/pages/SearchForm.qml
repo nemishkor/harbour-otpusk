@@ -12,24 +12,30 @@ Page {
     property date startDate
     property date endDate
     property bool selectedDates
-    property int length
-    property int adults
-    property var children
+    property int length: 0
+    property int adults: 2
+    property var children: []
+
+    function addDays(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
 
     Component.onCompleted: {
         fromCityId = 1544 // kyiv
         startDate = new Date()
-        startDate.setDate(startDate.getDate() + 30)
+        startDate = addDays(startDate, 7)
         startDate.setHours(0)
         startDate.setMinutes(0)
         startDate.setSeconds(0)
         endDate = new Date()
-        endDate.setDate(endDate.getDate() + 37)
+        endDate = addDays(endDate, 14)
         endDate.setHours(0)
         endDate.setMinutes(0)
         endDate.setSeconds(0)
+        datesButton.value = Qt.formatDate(startDate) + ' - ' + Qt.formatDate(endDate)
         selectedDates = false
-        length = 0
     }
 
     onStatusChanged: {
@@ -48,18 +54,11 @@ Page {
 
         VerticalScrollDecorator {}
 
-        PullDownMenu {
-            MenuItem {
-                text: "Новий пошук"
-                onClicked: pageStack.animatorPush(locationDialogPage)
-            }
-        }
-
         Column {
             id: column
             width: parent.width
 
-            PageHeader { title: "Новий пошук" }
+            PageHeader { title: "Вкажіть параметри" }
 
             Column {
                 width: parent.width
@@ -145,13 +144,13 @@ Page {
                                 acceptDestinationInstance.dateStartText = startDatePicker.dateText
                                 acceptDestinationInstance.min = startDatePicker.date
                                 acceptDestinationInstance.date = startDatePicker.date
-                                acceptDestinationInstance.title = "Дата повернення"
+                                acceptDestinationInstance.title = "Дата початку туру до"
                                 var max = startDatePicker.date
                                 max.setDate(max.getDate() + 14)
                                 acceptDestinationInstance.max = max
                             }
                         }
-                        title: "Дата вильоту"
+                        title: "Дата початку туру від"
                     }
                 }
 
@@ -266,8 +265,8 @@ Page {
 
                         Dialog{
                             id: childrenDialog
-                            property int child1: 2
-                            property int child2: 4
+                            property int child1: 0
+                            property int child2: 0
                             property int child3: 0
                             property int child4: 0
                             onAcceptPendingChanged: {
@@ -281,7 +280,7 @@ Page {
                                         ages.push(child3)
                                     if(child4 > 0)
                                         ages.push(child4)
-                                    root.children = childrenDialog.ages
+                                    root.children = ages
                                     childrenButton.value = ages.length > 0 ? ( ages.length + " (" + ages.join(', ') + ")" ) : '-'
                                 }
                             }
@@ -437,6 +436,34 @@ Page {
                         }
                     }
 
+                }
+
+                Button {
+                    id: startSearch
+
+                    function formatDate(date){
+                        var day = root.startDate.getDate();
+                        if(day < 10)
+                            day = "0" + day
+                        var month = root.startDate.getMonth() + 1;
+                        if(month < 10)
+                            month = "0" + month
+
+                        return date.getFullYear() + "-" + month + "-" + day
+                    }
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Шукати"
+                    onClicked: {
+                        searchParameters.locationId = root.locationId
+                        searchParameters.fromCityId = root.fromCityId
+                        searchParameters.startDate = formatDate(root.startDate)
+                        searchParameters.endDate = formatDate(root.endDate)
+                        searchParameters.length = root.length
+                        searchParameters.adults = root.adults
+                        searchParameters.children = root.children
+                        pageStack.animatorPush(Qt.resolvedUrl("SearchResults.qml"))
+                    }
                 }
 
             }

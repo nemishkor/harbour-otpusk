@@ -14,10 +14,9 @@
         <source></source>
         <translation></translation>
     </message>
-    <message>
-        <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>SearchResults</name>
     <message>
         <source>Otpusk</source>
         <translation type="unfinished"></translation>
