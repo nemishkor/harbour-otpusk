@@ -79,7 +79,7 @@ Page {
         Item {
             id: toursItem
             width: parent.width
-            height: parent.height - Theme.paddingMedium - pageHeader.height
+            height: parent.height - pageHeader.height
             anchors.top: pageHeader.bottom
 
             SilicaListView {
@@ -104,8 +104,6 @@ Page {
                             width: parent.width - progressCircle.width
                             color: Theme.highlightColor
                             text: name
-
-                            Component.onCompleted: console.log(ratingCount)
 
                             ProgressCircle {
                                 id: progressCircle
@@ -141,11 +139,20 @@ Page {
                             }
                         }
 
-                        Text {
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.secondaryColor
-                            text: country + ", " + city
+                        Icon{
+                            source: "image://theme/icon-m-whereami"
+                            Label {
+                                font.pixelSize: Theme.fontSizeSmall
+                                color: Theme.secondaryColor
+                                text: country + ", " + city
+                                anchors.left: parent.right
+                                width: page.width - 2 * Theme.horizontalPageMargin - parent.width
+                                anchors.verticalCenter: parent.verticalCenter
+                                truncationMode: TruncationMode.Fade
+                            }
                         }
+
+
                         Row{
                             spacing: Theme.paddingLarge
                             Text {
