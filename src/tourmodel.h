@@ -16,7 +16,8 @@ public:
             const double priceUah,
             const double price,
             const QString currency,
-            const bool isFirst);
+            const bool isFirst,
+            const QString stars);
 
     QString name() const;
     QString city() const;
@@ -27,6 +28,7 @@ public:
     double price() const;
     QString currency() const;
     bool isFirst() const;
+    QString stars() const;
 
 private:
     QString m_name;
@@ -39,6 +41,7 @@ private:
     QString m_currency;
     // first item of page
     bool m_isFirst;
+    QString m_stars;
 };
 
 class TourModel : public QAbstractListModel
@@ -55,7 +58,8 @@ public:
         PriceUahRole,
         PriceRole,
         CurrencyRole,
-        IsFirstRole
+        IsFirstRole,
+        StarsRole
     };
 
     TourModel(QObject *parent = 0);

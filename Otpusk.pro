@@ -22,6 +22,7 @@ SOURCES += src/Otpusk.cpp \
 
 DISTFILES += qml/Otpusk.qml \
     qml/components/DatePickerDialog.qml \
+    qml/components/HotelListItem.qml \
     qml/components/LocationDialog.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Home.qml \

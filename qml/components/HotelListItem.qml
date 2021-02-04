@@ -26,49 +26,66 @@ ListItem{
             }
         }
 
-        Text {
-            font.pixelSize: Theme.fontSizeMedium
-            width: parent.width - progressCircle.width
-            color: Theme.highlightColor
-            text: name
+        Row {
+            height: Theme.fontSizeMedium + 2 * Theme.paddingSmall
+            Label {
+                id: starsLabel
+                text: stars
+                font.pixelSize: Theme.fontSizeMedium
+                color: Theme.highlightColor
+            }
+            Icon {
+                id: starsIcon
+                source: "image://theme/icon-s-favorite"
+                anchors.verticalCenter: starsLabel.verticalCenter
+                color: Theme.highlightColor
+            }
+            Label {
+                leftPadding: Theme.paddingMedium
+                font.pixelSize: Theme.fontSizeMedium
+                width: mainColumn.width - progressCircle.width - starsLabel.width - starsIcon.width
+                color: Theme.highlightColor
+                text: name
+                truncationMode: TruncationMode.Fade
 
-            ProgressCircle {
-                id: progressCircle
-                anchors.left: parent.right
-                anchors.top: parent.top
-                progressValue: ratingAvarage / 10
-                backgroundColor: "#80000000"
-                progressColor: {
-                    if(ratingAvarage === 0)
-                        return "#807B7B7B"
-                    if(ratingAvarage > 6)
-                        return "#8051D511"
-                    if(ratingAvarage > 4)
-                        return "#80DEB321"
-                    return "#80EC4713"
-                }
-                Label{
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    text: ratingCount > 0 ? ratingCount : "-"
-                    font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
-                    color: ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
-                }
-                Label{
-                    id: ratingAvarageLabel
-                    visible: ratingCount > 0
-                    anchors.top: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    horizontalAlignment: Text.AlignHCenter
-                    text: ratingAvarage + "/10"
-                    font.pixelSize: Theme.fontSizeSmall
+                ProgressCircle {
+                    id: progressCircle
+                    anchors.left: parent.right
+                    anchors.top: parent.top
+                    progressValue: ratingAvarage / 10
+                    backgroundColor: "#80000000"
+                    progressColor: {
+                        if(ratingAvarage === 0)
+                            return "#807B7B7B"
+                        if(ratingAvarage > 6)
+                            return "#8051D511"
+                        if(ratingAvarage > 4)
+                            return "#80DEB321"
+                        return "#80EC4713"
+                    }
+                    Label{
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        text: ratingCount > 0 ? ratingCount : "-"
+                        font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                        color: ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
+                    }
+                    Label{
+                        id: ratingAvarageLabel
+                        visible: ratingCount > 0
+                        anchors.top: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignHCenter
+                        text: ratingAvarage + "/10"
+                        font.pixelSize: Theme.fontSizeSmall
+                    }
                 }
             }
         }
 
-        Icon{
+        Icon {
             source: "image://theme/icon-m-whereami"
             Label {
                 font.pixelSize: Theme.fontSizeSmall

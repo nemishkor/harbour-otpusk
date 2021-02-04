@@ -188,7 +188,8 @@ private slots:
                                 hotel["p"].toDouble(),
                                 hotel["po"].toDouble(),
                                 hotel["pu"].toString(),
-                                isFirst));
+                                isFirst,
+                                hotel["s"].toString()));
                         isFirst = false;
                     }
 
