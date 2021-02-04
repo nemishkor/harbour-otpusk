@@ -22,10 +22,12 @@ SOURCES += src/Otpusk.cpp \
 
 DISTFILES += qml/Otpusk.qml \
     qml/components/DatePickerDialog.qml \
+    qml/components/LocationDialog.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Home.qml \
     qml/pages/SearchForm.qml \
     qml/pages/SearchResults.qml \
+    qml/pages/SearchLoading.qml \
     rpm/Otpusk.changes.in \
     rpm/Otpusk.changes.run.in \
     rpm/Otpusk.spec \

@@ -15,7 +15,8 @@ public:
             const int ratingCount,
             const double priceUah,
             const double price,
-            const QString currency);
+            const QString currency,
+            const bool isFirst);
 
     QString name() const;
     QString city() const;
@@ -25,6 +26,7 @@ public:
     double priceUah() const;
     double price() const;
     QString currency() const;
+    bool isFirst() const;
 
 private:
     QString m_name;
@@ -35,11 +37,14 @@ private:
     double m_priceUah;
     double m_price;
     QString m_currency;
+    // first item of page
+    bool m_isFirst;
 };
 
 class TourModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 public:
     enum TourRoles {
         NameRole = Qt::UserRole + 1,
@@ -49,12 +54,16 @@ public:
         RatingCountRole,
         PriceUahRole,
         PriceRole,
-        CurrencyRole
+        CurrencyRole,
+        IsFirstRole
     };
 
     TourModel(QObject *parent = 0);
 
     void addTour(const Tour &tour);
+
+    Q_INVOKABLE void clear();
+    Q_INVOKABLE int firstItemIndexOfLastPage();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
@@ -64,6 +73,10 @@ protected:
     QHash<int, QByteArray> roleNames() const;
 private:
     QList<Tour> m_tours;
+    int m_firstItemIndexOfLastPage = 0;
+
+signals:
+    void countChanged();
 };
 
 

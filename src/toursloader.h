@@ -17,6 +17,7 @@ class ToursLoader : public QObject
     Q_OBJECT
     Q_PROPERTY(int progress READ getProgress NOTIFY progressChanged)
     Q_PROPERTY(int total READ getTotal NOTIFY totalChanged)
+    Q_PROPERTY(int page READ getPage WRITE setPage NOTIFY pageChanged)
     Q_PROPERTY(TourModel* tourModel READ getTourModel NOTIFY tourModelChanged)
     Q_PROPERTY(bool loading READ getLoading NOTIFY loadingChanged)
     Q_PROPERTY(bool replyFailed READ isReplyFailed NOTIFY isReplyFailedChanged)
@@ -36,6 +37,7 @@ public:
     }
 
     void continueSearch(){
+        qDebug("Continue search");
         if(requestNumber == 9){
             setLoading(false);
             setReplyFailed(true);
@@ -52,6 +54,7 @@ public:
         query.addQueryItem("to", QString::number(currentSearchParameters->getLocationId()));
         query.addQueryItem("checkIn", currentSearchParameters->getStartDate());
         query.addQueryItem("checkOut", currentSearchParameters->getEndDate());
+        query.addQueryItem("page", QString::number(page));
         if(currentSearchParameters->getFromCityId() > 0){
 
         }
@@ -119,6 +122,16 @@ public:
         }
     }
 
+    int getPage(){
+        return page;
+    }
+
+    void setPage(int _page){
+        page = _page;
+        qDebug(QString::number(_page).toLatin1());
+        emit pageChanged();
+    }
+
 private:
     Api *api;
     int requestNumber = 0;
@@ -128,6 +141,7 @@ private:
     bool loading = false;
     bool replyFailed = false;
     QString replyErrorText;
+    int page = 1;
     SearchParameters *currentSearchParameters;
 
 private slots:
@@ -156,12 +170,15 @@ private slots:
 
                 bool lastResult = json.object()["lastResult"].toBool();
                 if(lastResult){
-                    setLoading(false);
+
+                    qDebug("Last result");
 
                     QJsonObject::const_iterator hotelsIterator;
-                    QJsonObject hotels = json.object()["hotels"].toObject()["1"].toObject();
+                    QJsonObject hotels = json.object()["hotels"].toObject()[QString::number(page)].toObject();
+                    bool isFirst = true;
                     for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
                         QJsonObject hotel = (*hotelsIterator).toObject();
+                        qDebug(hotel["n"].toString().prepend("Added ").toLatin1());
                         tourModel.addTour(Tour(
                                 hotel["n"].toString(),
                                 hotel["c"].toObject()["n"].toString(),
@@ -170,10 +187,14 @@ private slots:
                                 hotel["v"].toInt(),
                                 hotel["p"].toDouble(),
                                 hotel["po"].toDouble(),
-                                hotel["pu"].toString()));
+                                hotel["pu"].toString(),
+                                isFirst));
+                        isFirst = false;
                     }
 
                     emit tourModelChanged();
+                    setLoading(false);
+
                 } else {
                     continueSearch();
                 }
@@ -191,6 +212,7 @@ signals:
     void loadingChanged();
     void isReplyFailedChanged();
     void replyErrorTextChanged();
+    void pageChanged();
 };
 
 #endif // TOURSLOADER_H

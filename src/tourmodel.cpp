@@ -8,7 +8,8 @@ Tour::Tour(
         const int ratingCount,
         const double priceUah,
         const double price,
-        const QString currency)
+        const QString currency,
+        const bool isFirst)
     : m_name(name),
       m_city(city),
       m_country(country),
@@ -16,7 +17,8 @@ Tour::Tour(
       m_ratingCount(ratingCount),
       m_priceUah(priceUah),
       m_price(price),
-      m_currency(currency)
+      m_currency(currency),
+      m_isFirst(isFirst)
 {
 }
 
@@ -60,6 +62,11 @@ QString Tour::currency() const
     return m_currency;
 }
 
+bool Tour::isFirst() const
+{
+    return m_isFirst;
+}
+
 TourModel::TourModel(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -69,7 +76,26 @@ void TourModel::addTour(const Tour &tour)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_tours << tour;
+    if(tour.isFirst()){
+        qDebug("is first");
+        m_firstItemIndexOfLastPage = m_tours.count() - 1;
+    }
     endInsertRows();
+    emit countChanged();
+}
+
+void TourModel::clear()
+{
+    beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+    m_tours.clear();
+    m_firstItemIndexOfLastPage = 0;
+    endRemoveRows();
+    emit countChanged();
+}
+
+int TourModel::firstItemIndexOfLastPage()
+{
+    return m_firstItemIndexOfLastPage;
 }
 
 int TourModel::rowCount(const QModelIndex & parent) const {
@@ -98,6 +124,8 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
         return tour.price();
     if (role == CurrencyRole)
         return tour.currency();
+    if (role == IsFirstRole)
+        return tour.isFirst();
     return QVariant();
 }
 QHash<int, QByteArray> TourModel::roleNames() const {
@@ -110,5 +138,6 @@ QHash<int, QByteArray> TourModel::roleNames() const {
     roles[PriceUahRole] = "priceUah";
     roles[PriceRole] = "price";
     roles[CurrencyRole] = "currency";
+    roles[IsFirstRole] = "isFirst";
     return roles;
 }

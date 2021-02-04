@@ -16,9 +16,20 @@
     </message>
 </context>
 <context>
+    <name>SearchLoading</name>
+    <message>
+        <source>Опитування туроператорів</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SearchResults</name>
     <message>
-        <source>Otpusk</source>
+        <source>Результати</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Опитування туроператорів</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -462,6 +462,8 @@ Page {
                         searchParameters.length = root.length
                         searchParameters.adults = root.adults
                         searchParameters.children = root.children
+                        toursLoader.page = 1
+                        toursLoader.tourModel.clear()
                         pageStack.animatorPush(Qt.resolvedUrl("SearchResults.qml"))
                     }
                 }
