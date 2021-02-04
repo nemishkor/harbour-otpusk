@@ -171,14 +171,14 @@ private slots:
                 bool lastResult = json.object()["lastResult"].toBool();
                 if(lastResult){
 
-                    qDebug("Last result");
+                    qDebug("Last result of search request");
 
                     QJsonObject::const_iterator hotelsIterator;
                     QJsonObject hotels = json.object()["hotels"].toObject()[QString::number(page)].toObject();
                     bool isFirst = true;
                     for (hotelsIterator = hotels.constBegin(); hotelsIterator != hotels.end(); ++hotelsIterator){
                         QJsonObject hotel = (*hotelsIterator).toObject();
-                        qDebug(hotel["n"].toString().prepend("Added ").toLatin1());
+//                        qDebug(hotel["n"].toString().prepend("Added ").toLatin1());
                         tourModel.addTour(Tour(
                                 hotel["n"].toString(),
                                 hotel["c"].toObject()["n"].toString(),
@@ -189,7 +189,8 @@ private slots:
                                 hotel["po"].toDouble(),
                                 hotel["pu"].toString(),
                                 isFirst,
-                                hotel["s"].toString()));
+                                hotel["s"].toString(),
+                                hotel["f"].toString()));
                         isFirst = false;
                     }
 

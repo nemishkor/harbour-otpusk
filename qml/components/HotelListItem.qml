@@ -2,28 +2,38 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 ListItem{
-    contentHeight: mainColumn.height + separator.height + 2 * Theme.paddingMedium
+    id: root
+    contentHeight: moreResultsLabel.height + mainImage.height + (isPortrait ? infoColumn.height : 0) + separator.height
     contentWidth: parent.width
 
+    Rectangle {
+        id: moreResultsLabel
+        visible: index !== 0 && isFirst
+        color: Theme.highlightBackgroundColor
+        height: Theme.itemSizeSmall
+        width: root.width
+        Label {
+            text: "Більше результатів"
+            anchors.centerIn: parent
+        }
+    }
+
+    Image {
+        id: mainImage
+        source: "https://newimg.otpusk.com/2/800x600/" + photo
+        width: isPortrait ? parent.width : (parent.width / 2 - 2 * Theme.horizontalPageMargin)
+        height: width * 600 / 800
+        opacity: root.highlighted ? 0.5 : 1.0
+    }
+
     Column {
-        id: mainColumn
-        width: parent.width - ( 2 * Theme.horizontalPageMargin )
+        id: infoColumn
         spacing: Theme.paddingSmall
         anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-
-        Rectangle {
-            visible: index !== 0 && isFirst
-            color: Theme.highlightBackgroundColor
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: Theme.itemSizeSmall
-            width: page.width
-            Label {
-                text: "Більше результатів"
-                anchors.centerIn: parent
-            }
+            top: isPortrait ? mainImage.bottom : mainImage.top
+            topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
+            left: isPortrait ? parent.left : mainImage.right
+            leftMargin: isPortrait ? 0 : Theme.paddingMedium
         }
 
         Row {
@@ -33,6 +43,7 @@ ListItem{
                 text: stars
                 font.pixelSize: Theme.fontSizeMedium
                 color: Theme.highlightColor
+                leftPadding: Theme.horizontalPageMargin + Theme.paddingSmall
             }
             Icon {
                 id: starsIcon
@@ -43,7 +54,7 @@ ListItem{
             Label {
                 leftPadding: Theme.paddingMedium
                 font.pixelSize: Theme.fontSizeMedium
-                width: mainColumn.width - progressCircle.width - starsLabel.width - starsIcon.width
+                width: root.width - progressCircle.width - starsLabel.width - starsIcon.width - Theme.horizontalPageMargin
                 color: Theme.highlightColor
                 text: name
                 truncationMode: TruncationMode.Fade
@@ -54,6 +65,7 @@ ListItem{
                     anchors.top: parent.top
                     progressValue: ratingAvarage / 10
                     backgroundColor: "#80000000"
+                    opacity: root.highlighted ? 0.5 : 1.0
                     progressColor: {
                         if(ratingAvarage === 0)
                             return "#807B7B7B"
@@ -86,28 +98,30 @@ ListItem{
         }
 
         Icon {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.horizontalPageMargin
             source: "image://theme/icon-m-whereami"
             Label {
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.secondaryColor
                 text: country + ", " + city
                 anchors.left: parent.right
-                width: page.width - 2 * Theme.horizontalPageMargin - parent.width
+                width: root.width - 2 * Theme.horizontalPageMargin - parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 truncationMode: TruncationMode.Fade
             }
         }
 
-
         Row{
             spacing: Theme.paddingLarge
-            Text {
+            Label {
                 id: priceUahLabel
                 font.pixelSize: Theme.fontSizeLarge
                 color: Theme.primaryColor
                 text: priceUah + "₴"
+                leftPadding: Theme.horizontalPageMargin
             }
-            Text {
+            Label {
                 anchors.baseline: priceUahLabel.baseline
                 font.pixelSize: Theme.fontSizeMedium
                 color: Theme.secondaryColor
@@ -127,12 +141,13 @@ ListItem{
                 }
             }
         }
+
     }
 
     Separator {
         id: separator
         anchors {
-            top: mainColumn.bottom
+            top: isPortrait ? infoColumn.bottom : mainImage.bottom
             topMargin: Theme.paddingMedium
         }
 

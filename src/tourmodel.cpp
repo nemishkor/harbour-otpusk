@@ -10,7 +10,8 @@ Tour::Tour(
         const double price,
         const QString currency,
         const bool isFirst,
-        const QString stars)
+        const QString stars,
+        const QString photo)
     : m_name(name),
       m_city(city),
       m_country(country),
@@ -20,7 +21,8 @@ Tour::Tour(
       m_price(price),
       m_currency(currency),
       m_isFirst(isFirst),
-      m_stars(stars)
+      m_stars(stars),
+      m_photo(photo)
 {
 }
 
@@ -72,6 +74,11 @@ bool Tour::isFirst() const
 QString Tour::stars() const
 {
     return m_stars;
+}
+
+QString Tour::photo() const
+{
+    return m_photo;
 }
 
 TourModel::TourModel(QObject *parent)
@@ -135,6 +142,8 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
         return tour.isFirst();
     if (role == StarsRole)
         return tour.stars();
+    if (role == PhotoRole)
+        return tour.photo();
     return QVariant();
 }
 QHash<int, QByteArray> TourModel::roleNames() const {
@@ -149,5 +158,6 @@ QHash<int, QByteArray> TourModel::roleNames() const {
     roles[CurrencyRole] = "currency";
     roles[IsFirstRole] = "isFirst";
     roles[StarsRole] = "stars";
+    roles[PhotoRole] = "photo";
     return roles;
 }
