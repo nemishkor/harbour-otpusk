@@ -72,11 +72,31 @@ public:
         connect(datesReply, &QNetworkReply::finished, this, &Api::datesReplyFinished);
     }
 
+    void hotel(int id) {
+        // stop previous request
+        if(hotelReply != NULL){
+            hotelReply->abort();
+        }
+        QUrl url = QUrl("https://export.otpusk.com/api/tours/hotel");
+        QUrlQuery query = QUrlQuery(url.query());
+        query.addQueryItem("hotelId", QString::number(id));
+        query.addQueryItem("lang", QString("ukr"));
+        query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
+        url.setQuery(query);
+        qDebug(qPrintable(url.toString()));
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0");
+        hotelReply = networkManager->get(request);
+        connect(hotelReply, &QNetworkReply::finished, this, &Api::hotelReplyFinished);
+    }
+
 private:
     QNetworkAccessManager *networkManager;
     QNetworkReply *searchReply;
     QNetworkReply *toursSuggestReply = NULL;
     QNetworkReply *datesReply = NULL;
+    QNetworkReply *hotelReply = NULL;
 
     void searchReplyFinished(){
         qDebug("search reply finished");
@@ -93,11 +113,16 @@ private:
         emit datesLoaded(datesReply);
     }
 
+    void hotelReplyFinished(){
+        qDebug("hotel reply finished");
+        emit hotelLoaded(hotelReply);
+    }
+
 signals:
     void searchLoaded(QNetworkReply*);
     void toursSuggestLoaded(QNetworkReply*);
     void datesLoaded(QNetworkReply*);
-
+    void hotelLoaded(QNetworkReply*);
 
 };
 

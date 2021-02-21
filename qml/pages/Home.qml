@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components"
 
 Page {
     id: page
@@ -15,7 +16,8 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: "Новий пошук"
-                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SearchForm.qml"))
+                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SearchForm.qml"), {},
+                                                  PageStackAction.Immediate)
             }
         }
 

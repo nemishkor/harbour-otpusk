@@ -16,7 +16,7 @@ Page {
     property bool _total: toursLoader.total
 
     onStatusChanged: {
-        if (status == PageStatus.Active) {
+        if (status == PageStatus.Active && toursLoader.tourModel.count === 0) {
             toursLoader.load(searchParameters)
         }
     }

@@ -5,8 +5,8 @@ import "../components"
 Page {
     id: root
 
-    property int locationId
-    property string locationName
+    property int locationId: 43
+    property string locationName: "Єгипет"
     property int fromCityId
     property string fromCityName
     property date startDate

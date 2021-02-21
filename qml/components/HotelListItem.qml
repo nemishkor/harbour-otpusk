@@ -3,14 +3,23 @@ import Sailfish.Silica 1.0
 
 ListItem{
     id: root
-    contentHeight: moreResultsLabel.height + mainImage.height + (isPortrait ? infoColumn.height : 0) + separator.height
+    contentHeight: moreResultsLabel.height + mainImage.height + (isPortrait ? infoColumn.height : 0) + separator.height + 2 * Theme.paddingLarge
     contentWidth: parent.width
+
+    onClicked: {
+        pageStack.animatorPush(
+            Qt.resolvedUrl("../pages/Tour.qml"),
+            {
+                id: model.id
+            }
+        )
+    }
 
     Rectangle {
         id: moreResultsLabel
         visible: index !== 0 && isFirst
         color: Theme.highlightBackgroundColor
-        height: Theme.itemSizeSmall
+        height: visible ? Theme.itemSizeSmall : 0
         width: root.width
         Label {
             text: "Більше результатів"
@@ -20,6 +29,8 @@ ListItem{
 
     Image {
         id: mainImage
+        anchors.top: moreResultsLabel.bottom
+        anchors.topMargin: moreResultsLabel.visible ? Theme.paddingMedium : 0
         source: "https://newimg.otpusk.com/2/800x600/" + photo
         width: isPortrait ? parent.width : (parent.width / 2 - 2 * Theme.horizontalPageMargin)
         height: width * 600 / 800
@@ -147,7 +158,7 @@ ListItem{
     Separator {
         id: separator
         anchors {
-            top: isPortrait ? infoColumn.bottom : mainImage.bottom
+            top: infoColumn.bottom
             topMargin: Theme.paddingMedium
         }
 

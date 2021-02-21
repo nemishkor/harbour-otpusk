@@ -10,6 +10,7 @@
 #include "locationmodel.h"
 #include "datesmodel.h"
 #include "searchparameters.h"
+#include "hotelloader.h"
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +46,11 @@ int main(int argc, char *argv[])
 
     ToursLoader toursLoader(&api);
     context->setContextProperty("toursLoader", &toursLoader);
+
+    Hotel hotel;
+    context->setContextProperty("hotel", &hotel);
+    HotelLoader hotelLoader(&api, &hotel);
+    context->setContextProperty("hotelLoader", &hotelLoader);
 
     // If you wish to publish your app on the Jolla harbour, it is recommended
     // that you prefix your internal namespaces with "harbour.".

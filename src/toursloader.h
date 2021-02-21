@@ -180,6 +180,7 @@ private slots:
                         QJsonObject hotel = (*hotelsIterator).toObject();
 //                        qDebug(hotel["n"].toString().prepend("Added ").toLatin1());
                         tourModel.addTour(Tour(
+                                hotel["i"].toInt(),
                                 hotel["n"].toString(),
                                 hotel["c"].toObject()["n"].toString(),
                                 hotel["t"].toObject()["n"].toString(),

@@ -16,13 +16,6 @@
     </message>
 </context>
 <context>
-    <name>SearchLoading</name>
-    <message>
-        <source>Опитування туроператорів</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SearchResults</name>
     <message>
         <source>Результати</source>

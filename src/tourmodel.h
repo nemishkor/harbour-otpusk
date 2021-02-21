@@ -8,6 +8,7 @@ class Tour
 {
 public:
     Tour(
+            const int id,
             const QString &name,
             const QString &city,
             const QString &country,
@@ -20,6 +21,7 @@ public:
             const QString stars,
             const QString photo);
 
+    int id() const;
     QString name() const;
     QString city() const;
     QString country() const;
@@ -33,6 +35,7 @@ public:
     QString photo() const;
 
 private:
+    int m_id;
     QString m_name;
     QString m_city;
     QString m_country;
@@ -53,7 +56,8 @@ class TourModel : public QAbstractListModel
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 public:
     enum TourRoles {
-        NameRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        NameRole,
         CityRole,
         CountryRole,
         RatingAvarageRole,
@@ -69,12 +73,9 @@ public:
     TourModel(QObject *parent = 0);
 
     void addTour(const Tour &tour);
-
     Q_INVOKABLE void clear();
     Q_INVOKABLE int firstItemIndexOfLastPage();
-
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 protected:

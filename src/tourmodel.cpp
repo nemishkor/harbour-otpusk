@@ -1,6 +1,7 @@
 #include "tourmodel.h"
 
 Tour::Tour(
+        const int id,
         const QString &name,
         const QString &city,
         const QString &country,
@@ -12,7 +13,8 @@ Tour::Tour(
         const bool isFirst,
         const QString stars,
         const QString photo)
-    : m_name(name),
+    : m_id(id),
+      m_name(name),
       m_city(city),
       m_country(country),
       m_ratingAvarage(ratingAvarage),
@@ -24,6 +26,11 @@ Tour::Tour(
       m_stars(stars),
       m_photo(photo)
 {
+}
+
+int Tour::id() const
+{
+    return m_id;
 }
 
 QString Tour::name() const
@@ -122,6 +129,8 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
         return QVariant();
 
     const Tour &tour = m_tours[index.row()];
+    if (role == IdRole)
+        return tour.id();
     if (role == NameRole)
         return tour.name();
     if (role == CityRole)
@@ -148,6 +157,7 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
 }
 QHash<int, QByteArray> TourModel::roleNames() const {
     QHash<int, QByteArray> roles;
+    roles[IdRole] = "id";
     roles[NameRole] = "name";
     roles[CityRole] = "city";
     roles[CountryRole] = "country";
