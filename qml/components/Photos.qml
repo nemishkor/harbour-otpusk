@@ -6,7 +6,7 @@ Item {
     property var photos: []
 
     width: parent.width
-    height: list.heightImage + bigImage.height
+    height: list.heightImage + bigImage.height + Theme.paddingMedium
 
     Image{
         id: bigImage

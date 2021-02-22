@@ -5,19 +5,19 @@ import "../components"
 Page {
 
     id: page
-    property var id
+    property var hotelId
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
-    allowedOrientations: Orientation.All
+    allowedOrientations: Orientation.Portrait
 
-    Component.onCompleted: hotelLoader.load(page.id)
+    Component.onCompleted: hotelLoader.load(hotelId)
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: pageHeader.height + infoColumn.height + photos.height + ratingsSection.height + ratingsList.height
+        contentHeight: pageHeader.height + pageHeader.y + infoColumn.height + infoColumn.anchors.topMargin + Theme.paddingLarge
 
         Label {
             id: pageHeader
@@ -54,99 +54,31 @@ Page {
             }
         }
 
-        Label{
-            visible: hotelLoader.replyFailed
-            x: Theme.horizontalPageMargin
-            anchors.top: pageHeader.bottom
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            text: hotelLoader.replyErrorText
-            color: Theme.errorColor
-            font.pixelSize: Theme.fontSizeMedium
-            wrapMode: "WordWrap"
-        }
-
-        Photos {
-            id: photos
-            photos: hotel.photos
-            anchors.top: pageHeader.bottom
-            anchors.topMargin: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
-        }
-
-        ProgressCircle {
-            id: progressCircle
-            anchors {
-                top: photos.bottom
-                right: photos.right
-                rightMargin: Theme.horizontalPageMargin
-            }
-
-            progressValue: hotel.ratingAvarage / 10
-            backgroundColor: "#80000000"
-            opacity: root.highlighted ? 0.5 : 1.0
-            progressColor: {
-                if(hotel.ratingAvarage === 0)
-                    return "#807B7B7B"
-                if(hotel.ratingAvarage > 6)
-                    return "#8051D511"
-                if(hotel.ratingAvarage > 4)
-                    return "#80DEB321"
-                return "#80EC4713"
-            }
-            Label{
-                anchors.fill: parent
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: hotel.ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
-                color: hotel.ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
-                text: hotel.ratingCount > 0 ? hotel.ratingCount : "-"
-            }
-            Label{
-                id: ratingAvarageLabel
-                visible: hotel.ratingCount > 0
-                anchors.top: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                horizontalAlignment: Text.AlignHCenter
-                text: hotel.ratingAvarage + "/10"
-                font.pixelSize: Theme.fontSizeSmall
-            }
-        }
-
-        SectionHeader {
-            id: ratingsSection
-            text: "Оцінки"
-        }
-
-        ListView {
-            id: ratingsList
-            width: parent.width
-            model: hotel.hotelRatings
-            delegate: ListItem {
-                Slider {
-                    value: model.vote
-                    minimumValue: 0
-                    maximumValue: 10
-                    enabled: false
-                    width: parent.width
-                    valueText : model.vote
-                    label: model.name
-                }
-                Component.onCompleted: {
-                    console.log(model.name)
-                }
-            }
-        }
-
         Column {
             id: infoColumn
             width: parent.width
 
-            spacing: Theme.paddingSmall
+            spacing: Theme.paddingMedium
             anchors {
-                top: isPortrait ? photos.bottom : photos.top
+                top: pageHeader.bottom
                 topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
                 left: isPortrait ? parent.left : photos.right
                 leftMargin: isPortrait ? 0 : Theme.paddingMedium
+            }
+
+            Label{
+                visible: hotelLoader.replyFailed
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                text: hotelLoader.replyErrorText
+                color: Theme.errorColor
+                font.pixelSize: Theme.fontSizeMedium
+                wrapMode: "WordWrap"
+            }
+
+            Photos {
+                id: photos
+                photos: hotel.photos
             }
 
             Icon {
@@ -160,9 +92,98 @@ Page {
                     }
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.secondaryColor
-                    width: root.width - 2 * Theme.horizontalPageMargin - parent.width
+                    width: parent.width - 2 * Theme.horizontalPageMargin
                     truncationMode: TruncationMode.Fade
                     text: hotel.country + ", " + hotel.city
+                }
+            }
+
+            SectionHeader {
+                id: ratingsSection
+                text: "Оцінки"
+            }
+
+            GridView {
+                width: parent.width
+                cellWidth: parent.width / 3
+                cellHeight: Theme.itemSizeSmall + 2 * Theme.fontSizeSmall + Theme.paddingLarge
+                height: Math.ceil(count / Math.floor(width / cellWidth)) * cellHeight
+                model: ListModel {
+                    ListElement {
+                        name: "всього"
+                        vote: 6.6
+                        count: 999
+                    }
+                    ListElement {
+                        name: "номери"
+                        vote: 5.5
+                        count: 40
+                    }
+                    ListElement {
+                        name: "сервис"
+                        vote: 6.6
+                        count: 40
+                    }
+                    ListElement {
+                        name: "чистота"
+                        vote: 3.0
+                        count: 55
+                    }
+                    ListElement {
+                        name: "інфраструктура"
+                        vote: 9.5
+                        count: 120
+                    }
+                    ListElement {
+                        name: "харчування"
+                        vote: 2.6
+                        count: 10
+                    }
+                    ListElement {
+                        name: "харчування"
+                        vote: 2.6
+                        count: 10
+                    }
+                }
+                delegate: Column {
+                    width: parent.width / 3
+                    Label {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: model.name
+                        font.pixelSize: Theme.fontSizeSmall
+                    }
+                    ProgressCircle {
+                        id: ratingCircle
+                        progressValue: model.vote / 10
+                        backgroundColor: "#80000000"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        progressColor: {
+                            if(model.vote === 0)
+                                return "#807B7B7B"
+                            if(model.vote > 6)
+                                return "#8051D511"
+                            if(model.vote > 4)
+                                return "#80DEB321"
+                            return "#80EC4713"
+                        }
+                        Label{
+                            anchors.fill: parent
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: model.count > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                            color: model.count < 10 ? "#80EC4713" : ratingLabel.color
+                            text: model.count > 0 ? model.count : "-"
+                        }
+                    }
+                    Label{
+                        id: ratingLabel
+                        visible: model.count > 0
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: model.vote + "/10"
+                        font.pixelSize: Theme.fontSizeSmall
+                    }
                 }
             }
 
