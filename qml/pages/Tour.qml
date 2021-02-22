@@ -81,6 +81,13 @@ Page {
                 photos: hotel.photos
             }
 
+            Label {
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                text: hotel.description
+                wrapMode: "WordWrap"
+            }
+
             Icon {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.horizontalPageMargin
@@ -91,11 +98,17 @@ Page {
                         verticalCenter: parent.verticalCenter
                     }
                     font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.secondaryColor
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     truncationMode: TruncationMode.Fade
                     text: hotel.country + ", " + hotel.city
                 }
+            }
+
+            Label {
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                wrapMode: "WordWrap"
+                text: hotel.distance
             }
 
             SectionHeader {
@@ -108,50 +121,15 @@ Page {
                 cellWidth: parent.width / 3
                 cellHeight: Theme.itemSizeSmall + 2 * Theme.fontSizeSmall + Theme.paddingLarge
                 height: Math.ceil(count / Math.floor(width / cellWidth)) * cellHeight
-                model: ListModel {
-                    ListElement {
-                        name: "всього"
-                        vote: 6.6
-                        count: 999
-                    }
-                    ListElement {
-                        name: "номери"
-                        vote: 5.5
-                        count: 40
-                    }
-                    ListElement {
-                        name: "сервис"
-                        vote: 6.6
-                        count: 40
-                    }
-                    ListElement {
-                        name: "чистота"
-                        vote: 3.0
-                        count: 55
-                    }
-                    ListElement {
-                        name: "інфраструктура"
-                        vote: 9.5
-                        count: 120
-                    }
-                    ListElement {
-                        name: "харчування"
-                        vote: 2.6
-                        count: 10
-                    }
-                    ListElement {
-                        name: "харчування"
-                        vote: 2.6
-                        count: 10
-                    }
-                }
+                model: hotel.hotelRatings
                 delegate: Column {
                     width: parent.width / 3
                     Label {
                         width: parent.width
                         horizontalAlignment: Text.AlignHCenter
-                        text: model.name
+                        text: model.name === "_total" ? "середній бал" : model.name
                         font.pixelSize: Theme.fontSizeSmall
+                        font.weight: model.name === "_total" ? Font.Bold : Font.Normal
                     }
                     ProgressCircle {
                         id: ratingCircle
@@ -174,6 +152,7 @@ Page {
                             font.pixelSize: model.count > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
                             color: model.count < 10 ? "#80EC4713" : ratingLabel.color
                             text: model.count > 0 ? model.count : "-"
+                            font.weight: model.name === "_total" ? Font.Bold : Font.Normal
                         }
                     }
                     Label{
@@ -183,6 +162,7 @@ Page {
                         horizontalAlignment: Text.AlignHCenter
                         text: model.vote + "/10"
                         font.pixelSize: Theme.fontSizeSmall
+                        font.weight: model.name === "_total" ? Font.Bold : Font.Normal
                     }
                 }
             }
@@ -308,6 +288,8 @@ Page {
                     }
                 }
             }
+
+
 
         }
 

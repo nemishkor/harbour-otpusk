@@ -65,6 +65,8 @@ void HotelLoader::handleReply(QNetworkReply *reply){
         QJsonObject responseHotel = responseObj["hotel"].toObject();
 
         hotel->setName(responseHotel["nm"].toString());
+        hotel->setDescription(responseHotel["o"].toObject()["dc"].toString());
+        hotel->setDistance(responseHotel["o"].toObject()["di"].toString());
         hotel->setCity(responseHotel["c"].toObject()["n"].toString());
         hotel->setCountry(responseHotel["t"].toObject()["n"].toString());
         hotel->setRatingAvarage(responseHotel["r"].toDouble());
@@ -142,6 +144,10 @@ void HotelLoader::handleReply(QNetworkReply *reply){
         emit hotel->activitiesServices();
 
         hotel->hotelRatings()->clear();
+        hotel->hotelRatings()->addHotelRating(HotelRating(
+                "_total",
+                responseHotel["r"].toDouble(),
+                responseHotel["v"].toString().toInt()));
         QJsonObject ratings = responseHotel["vs"].toObject();
         for(json_object_iterator = ratings.constBegin(); json_object_iterator != ratings.end(); json_object_iterator++){
             QJsonObject rating = json_object_iterator->toObject();

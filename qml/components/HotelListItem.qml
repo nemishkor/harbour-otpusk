@@ -10,7 +10,7 @@ ListItem{
         pageStack.animatorPush(
             Qt.resolvedUrl("../pages/Tour.qml"),
             {
-                id: model.id
+                hotelId: model.id
             }
         )
     }
