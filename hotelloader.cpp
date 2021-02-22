@@ -55,7 +55,7 @@ void HotelLoader::handleReply(QNetworkReply *reply){
         qDebug("Request successfully finished");
         QByteArray responseData = reply->readAll();
         QJsonDocument json = QJsonDocument::fromJson(responseData);
-//        qDebug(qPrintable(json.toJson()));
+        //        qDebug(qPrintable(json.toJson()));
         QJsonObject responseObj = json.object();
         if(responseObj.contains(QString("error")) && responseObj.take(QString("error")).toBool() && responseObj.contains(QString("message"))){
             setReplyFailed(true);
@@ -72,12 +72,87 @@ void HotelLoader::handleReply(QNetworkReply *reply){
         hotel->setStars(responseHotel["s"].toObject()["n"].toString().remove('*'));
 
         QStringList photosList;
-        QJsonArray jsonPhotos = responseHotel.take("f").toArray();
-        QJsonArray::const_iterator i;
-        for(i = jsonPhotos.constBegin(); i != jsonPhotos.end(); i++){
-            photosList.append(i->toString());
+        QJsonArray jsonPhotos = responseHotel["f"].toArray();
+        QJsonArray::const_iterator json_array_iterator;
+        for(json_array_iterator = jsonPhotos.constBegin(); json_array_iterator != jsonPhotos.end(); json_array_iterator++){
+            photosList.append(json_array_iterator->toString());
         }
         hotel->setPhotos(photosList);
+
+        QJsonObject::const_iterator json_object_iterator;
+
+        hotel->roomServices()->clear();
+        QJsonObject services = responseHotel["e"].toObject()["r"].toObject();
+        for(json_object_iterator = services.constBegin(); json_object_iterator != services.end(); json_object_iterator++){
+            QJsonObject service = json_object_iterator->toObject();
+            hotel->roomServices()->addRoomService(RoomService(
+                    service["name"].toString(),
+                    service["all"].toBool(),
+                    service["id"].toString(),
+                    service["title"].toString()));
+        }
+        emit hotel->roomServicesChanged();
+
+        hotel->hotelServices()->clear();
+        services = responseHotel["e"].toObject()["h"].toObject();
+        for(json_object_iterator = services.constBegin(); json_object_iterator != services.end(); json_object_iterator++){
+            QJsonObject service = json_object_iterator->toObject();
+            hotel->hotelServices()->addHotelService(HotelService(
+                    service["name"].toString(),
+                    service["value"].toString(),
+                    service["id"].toString(),
+                    service["title"].toString()));
+        }
+        emit hotel->hotelServicesChanged();
+
+        hotel->forChildrenServices()->clear();
+        services = responseHotel["e"].toObject()["c"].toObject();
+        for(json_object_iterator = services.constBegin(); json_object_iterator != services.end(); json_object_iterator++){
+            QJsonObject service = json_object_iterator->toObject();
+            hotel->forChildrenServices()->addHotelService(HotelService(
+                    service["name"].toString(),
+                    service["value"].toString(),
+                    service["id"].toString(),
+                    service["title"].toString()));
+        }
+        emit hotel->forChildrenServicesChanged();
+
+        hotel->beachServices()->clear();
+        services = responseHotel["e"].toObject()["b"].toObject();
+        for(json_object_iterator = services.constBegin(); json_object_iterator != services.end(); json_object_iterator++){
+            QJsonObject service = json_object_iterator->toObject();
+            hotel->beachServices()->addHotelService(HotelService(
+                    service["name"].toString(),
+                    service["value"].toString(),
+                    service["id"].toString(),
+                    service["title"].toString()));
+        }
+        emit hotel->beachServicesChanged();
+
+        hotel->activitiesServices()->clear();
+        services = responseHotel["e"].toObject()["s"].toObject();
+        for(json_object_iterator = services.constBegin(); json_object_iterator != services.end(); json_object_iterator++){
+            QJsonObject service = json_object_iterator->toObject();
+            hotel->activitiesServices()->addHotelService(HotelService(
+                    service["name"].toString(),
+                    service["value"].toString(),
+                    service["id"].toString(),
+                    service["title"].toString()));
+        }
+        emit hotel->activitiesServices();
+
+        hotel->hotelRatings()->clear();
+        QJsonObject ratings = responseHotel["vs"].toObject();
+        for(json_object_iterator = ratings.constBegin(); json_object_iterator != ratings.end(); json_object_iterator++){
+            QJsonObject rating = json_object_iterator->toObject();
+            hotel->hotelRatings()->addHotelRating(HotelRating(
+                    rating["name"].toString(),
+                    rating["vote"].toDouble(),
+                    rating["count"].toInt()));
+        }
+        emit hotel->hotelRatingsChanged();
+
+
 
     }
     qDebug("Request not finished yet");

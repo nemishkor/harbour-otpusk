@@ -17,13 +17,13 @@ Page {
         anchors.fill: parent
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: pageHeader.height + infoColumn.height + photos.height
+        contentHeight: pageHeader.height + infoColumn.height + photos.height + ratingsSection.height + ratingsList.height
 
         Label {
             id: pageHeader
-            width: parent.width - 4 * Theme.horizontalPageMargin
-            color: Theme.highlightColor
             y: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
+            width: parent.width - 4 * Theme.horizontalPageMargin - starsIcon.width
+            color: Theme.highlightColor
             anchors {
                 right: parent.right
                 rightMargin: Theme.horizontalPageMargin
@@ -34,13 +34,23 @@ Page {
                 family: Theme.fontFamilyHeading
             }
             wrapMode: "WordWrap"
-            text: hotel.name
+            text: hotel.name + " " + hotel.stars
 
             BusyIndicator {
                 running: hotelLoader.loading
                 size: BusyIndicatorSize.Large
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Icon {
+                id: starsIcon
+                source: "image://theme/icon-s-favorite"
+                anchors {
+                    left: pageHeader.right
+                    verticalCenter: pageHeader.verticalCenter
+                }
+                color: Theme.highlightColor
             }
         }
 
@@ -57,7 +67,6 @@ Page {
 
         Photos {
             id: photos
-            page: page
             photos: hotel.photos
             anchors.top: pageHeader.bottom
             anchors.topMargin: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
@@ -103,6 +112,31 @@ Page {
             }
         }
 
+        SectionHeader {
+            id: ratingsSection
+            text: "Оцінки"
+        }
+
+        ListView {
+            id: ratingsList
+            width: parent.width
+            model: hotel.hotelRatings
+            delegate: ListItem {
+                Slider {
+                    value: model.vote
+                    minimumValue: 0
+                    maximumValue: 10
+                    enabled: false
+                    width: parent.width
+                    valueText : model.vote
+                    label: model.name
+                }
+                Component.onCompleted: {
+                    console.log(model.name)
+                }
+            }
+        }
+
         Column {
             id: infoColumn
             width: parent.width
@@ -113,23 +147,6 @@ Page {
                 topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
                 left: isPortrait ? parent.left : photos.right
                 leftMargin: isPortrait ? 0 : Theme.paddingMedium
-            }
-
-            Row {
-                height: Theme.fontSizeMedium + 2 * Theme.paddingSmall
-                Label {
-                    id: starsLabel
-                    leftPadding: Theme.horizontalPageMargin + Theme.paddingSmall
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    text: hotel.stars
-                }
-                Icon {
-                    id: starsIcon
-                    source: "image://theme/icon-s-favorite"
-                    anchors.verticalCenter: starsLabel.verticalCenter
-                    color: Theme.highlightColor
-                }
             }
 
             Icon {
@@ -146,6 +163,128 @@ Page {
                     width: root.width - 2 * Theme.horizontalPageMargin - parent.width
                     truncationMode: TruncationMode.Fade
                     text: hotel.country + ", " + hotel.city
+                }
+            }
+
+            SectionHeader {
+                text: "Послуги та зручності"
+            }
+
+            ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
+                rowSpacing: Theme.paddingSmall
+                Button {
+                    text: "В номері"
+                    onClicked: pageStack.animatorPush(roomServicesPage)
+                }
+                Button {
+                    text: "В готелі"
+                    onClicked: pageStack.animatorPush(hotelServicesPage)
+                }
+                Button {
+                    text: "Пляж"
+                    onClicked: pageStack.animatorPush(beachServicesPage)
+                }
+                Button {
+                    text: "Для дітей"
+                    onClicked: pageStack.animatorPush(forChildrenServicesPage)
+                }
+            }
+            ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
+                Button {
+                    text: "Активності та спорт"
+                    onClicked: pageStack.animatorPush(activitiesServicesPage)
+                }
+            }
+
+            Page {
+                id: roomServicesPage
+                SilicaListView {
+                    anchors.fill: parent
+                    model: hotel.roomServices
+                    header: Column {
+                        width: parent.width
+                        PageHeader { title: "В номері" }
+                    }
+                    delegate: Label {
+                        width: roomServicesPage.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        text: model.name + (model.title ? " | " + model.title : "") + (model.all ? "" : " | не всюди")
+                        wrapMode: "WordWrap"
+                    }
+                }
+            }
+
+            Page {
+                id: hotelServicesPage
+                SilicaListView {
+                    anchors.fill: parent
+                    model: hotel.hotelServices
+                    header: Column {
+                        width: parent.width
+                        PageHeader { title: "В готелі" }
+                    }
+                    delegate: Label {
+                        width: hotelServicesPage.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        text: model.name + (model.title ? " | " + model.title : "") + (model.all ? "" : " | не всюди")
+                        wrapMode: "WordWrap"
+                    }
+                }
+            }
+
+            Page {
+                id: forChildrenServicesPage
+                SilicaListView {
+                    anchors.fill: parent
+                    model: hotel.forChildrenServices
+                    header: Column {
+                        width: parent.width
+                        PageHeader { title: "Для дітей" }
+                    }
+                    delegate: Label {
+                        width: forChildrenServicesPage.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        text: model.name + (model.title ? " | " + model.title : "") + (model.all ? "" : " | не всюди")
+                        wrapMode: "WordWrap"
+                    }
+                }
+            }
+
+            Page {
+                id: beachServicesPage
+                SilicaListView {
+                    anchors.fill: parent
+                    model: hotel.beachServices
+                    header: Column {
+                        width: parent.width
+                        PageHeader { title: "Пляж" }
+                    }
+                    delegate: Label {
+                        width: beachServicesPage.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        text: model.name + (model.title ? " | " + model.title : "") + (model.all ? "" : " | не всюди")
+                        wrapMode: "WordWrap"
+                    }
+                }
+            }
+
+            Page {
+                id: activitiesServicesPage
+                SilicaListView {
+                    anchors.fill: parent
+                    model: hotel.activiesServices
+                    header: Column {
+                        width: parent.width
+                        PageHeader { title: "Активності та спорт" }
+                    }
+                    delegate: Label {
+                        width: activitiesServicesPage.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        text: model.name + (model.title ? " | " + model.title : "") + (model.all ? "" : " | не всюди")
+                        wrapMode: "WordWrap"
+                    }
                 }
             }
 

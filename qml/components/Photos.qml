@@ -3,7 +3,6 @@ import Sailfish.Silica 1.0
 
 Item {
 
-    property Component page
     property var photos: []
 
     width: parent.width
@@ -11,7 +10,7 @@ Item {
 
     Image{
         id: bigImage
-        width: isPortrait ? parent.width : list.widthImage * page.width / list.heightImage
+        width: isPortrait ? parent.width : list.widthImage * parent.width / list.heightImage
         height: Math.floor(bigImage.width * list.heightImage / list.widthImage)
     }
 
