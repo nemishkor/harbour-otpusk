@@ -124,34 +124,10 @@ ListItem{
             }
         }
 
-        Row{
-            spacing: Theme.paddingLarge
-            Label {
-                id: priceUahLabel
-                font.pixelSize: Theme.fontSizeLarge
-                color: Theme.primaryColor
-                text: priceUah + "₴"
-                leftPadding: Theme.horizontalPageMargin
-            }
-            Label {
-                anchors.baseline: priceUahLabel.baseline
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.secondaryColor
-                text: {
-                    var t = price
-                    switch(currency){
-                    case "eur":
-                        t += "€"
-                        break;
-                    case "usd":
-                        t += "$"
-                        break;
-                    default:
-                        t += currency
-                        break;
-                    }
-                }
-            }
+        Price {
+            price: model.price
+            priceUah: model.priceUah
+            currency: model.currency
         }
 
     }

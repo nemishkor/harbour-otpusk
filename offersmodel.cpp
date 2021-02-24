@@ -90,7 +90,7 @@ QHash<int, QByteArray> OffersModel::roleNames() const
     roles[ChildrenAgesRole] = "childrenAges";
     roles[NightsRole] = "nights";
     roles[FoodTypeRole] = "foodType";
-    roles[RoomNameRole] = "roomType";
+    roles[RoomNameRole] = "roomName";
     roles[PriceUahRole] = "priceUah";
     roles[PriceRole] = "price";
     roles[CurrencyRole] = "currency";

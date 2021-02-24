@@ -17,69 +17,54 @@ Page {
     Component.onCompleted: hotelLoader.load(hotelId)
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaFlickable {
-        anchors.fill: parent
+    SilicaListView {
+        anchors.fill: parent        
+        spacing: Theme.paddingMedium
+        delegate: OfferListItem {}
+        model: tour.offers()
 
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: pageHeader.height + pageHeader.y + infoColumn.height + infoColumn.anchors.topMargin + Theme.paddingLarge
-
-        Label {
-            id: pageHeader
-            y: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
-            width: parent.width - 4 * Theme.horizontalPageMargin - starsIcon.width
-            color: Theme.highlightColor
-            anchors {
-                right: parent.right
-                rightMargin: Theme.horizontalPageMargin
-            }
-            horizontalAlignment: Text.AlignRight
-            font {
-                pixelSize: Theme.fontSizeLarge
-                family: Theme.fontFamilyHeading
-            }
-            wrapMode: "WordWrap"
-            text: hotel.name + " " + hotel.stars
-
-            BusyIndicator {
-                running: hotelLoader.loading
-                size: BusyIndicatorSize.Large
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            Icon {
-                id: starsIcon
-                source: "image://theme/icon-s-favorite"
-                anchors {
-                    left: pageHeader.right
-                    verticalCenter: pageHeader.verticalCenter
-                }
-                color: Theme.highlightColor
-            }
-        }
-
-        Column {
-            id: infoColumn
+        header: Column {
             width: parent.width
-
+            height: Theme.paddingMedium * 11 + pageHeader.height + failedMessage.height + photos.height + description.height + location.height + distance.height + ratingsSection.height + ratingGrid.height + servicesHeader.height + servicesButtons.height + servicesButtons2.height + pricesHeader.height
             spacing: Theme.paddingMedium
-            anchors {
-                top: pageHeader.bottom
-                topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
-                left: isPortrait ? parent.left : photos.right
-                leftMargin: isPortrait ? 0 : Theme.paddingMedium
-            }
 
-            ListView {
-                width: parent.width
-                height: 400
-                model: tour.offers()
-                delegate: Label {
-                    text: model.id + ". " + model.dateFrom + " - " + model.dateTo
+            Label {
+                id: pageHeader
+                y: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
+                width: parent.width - 4 * Theme.horizontalPageMargin - starsIcon.width
+                color: Theme.highlightColor
+                anchors {
+                    right: parent.right
+                    rightMargin: Theme.horizontalPageMargin
+                }
+                horizontalAlignment: Text.AlignRight
+                font {
+                    pixelSize: Theme.fontSizeLarge
+                    family: Theme.fontFamilyHeading
+                }
+                wrapMode: "WordWrap"
+                text: hotel.name + " " + hotel.stars
+
+                BusyIndicator {
+                    running: hotelLoader.loading
+                    size: BusyIndicatorSize.Large
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Icon {
+                    id: starsIcon
+                    source: "image://theme/icon-s-favorite"
+                    anchors {
+                        left: pageHeader.right
+                        verticalCenter: pageHeader.verticalCenter
+                    }
+                    color: Theme.highlightColor
                 }
             }
 
             Label{
+                id: failedMessage
                 visible: hotelLoader.replyFailed
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
@@ -95,6 +80,7 @@ Page {
             }
 
             Label {
+                id: description
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 text: hotel.description
@@ -102,6 +88,7 @@ Page {
             }
 
             Icon {
+                id: location
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.horizontalPageMargin
                 source: "image://theme/icon-m-whereami"
@@ -118,6 +105,7 @@ Page {
             }
 
             Label {
+                id: distance
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 wrapMode: "WordWrap"
@@ -130,10 +118,12 @@ Page {
             }
 
             GridView {
+                id: ratingGrid
                 width: parent.width
                 cellWidth: parent.width / 3
                 cellHeight: Theme.itemSizeSmall + 2 * Theme.fontSizeSmall + Theme.paddingLarge
                 height: Math.ceil(count / Math.floor(width / cellWidth)) * cellHeight
+                interactive: false
                 model: hotel.hotelRatings
                 delegate: Column {
                     width: parent.width / 3
@@ -181,10 +171,12 @@ Page {
             }
 
             SectionHeader {
+                id: servicesHeader
                 text: "Послуги та зручності"
             }
 
             ButtonLayout {
+                id: servicesButtons
                 preferredWidth: Theme.buttonWidthExtraSmall
                 rowSpacing: Theme.paddingSmall
                 Button {
@@ -205,6 +197,7 @@ Page {
                 }
             }
             ButtonLayout {
+                id: servicesButtons2
                 preferredWidth: Theme.buttonWidthExtraSmall
                 Button {
                     text: "Активності та спорт"
@@ -300,6 +293,11 @@ Page {
                         wrapMode: "WordWrap"
                     }
                 }
+            }
+
+            SectionHeader {
+                id: pricesHeader
+                text: "Ціни та варіанти туру"
             }
 
         }
