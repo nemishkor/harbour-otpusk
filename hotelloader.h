@@ -38,7 +38,9 @@ public:
         AllRole,
         TitleRole
     };
-    RoomServicesModel(QObject *parent = 0){}
+    RoomServicesModel(QObject *parent = 0){
+        Q_UNUSED(parent);
+    }
     void addRoomService(const RoomService &roomService){
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_items << roomService;
@@ -109,7 +111,9 @@ public:
         ValueRole,
         TitleRole
     };
-    HotelServicesModel(QObject *parent = 0){}
+    HotelServicesModel(QObject *parent = 0){
+        Q_UNUSED(parent);
+    }
     void addHotelService(const HotelService &hotelService){
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_items << hotelService;
@@ -177,7 +181,9 @@ public:
         VoteRole,
         CountRole
     };
-    HotelRatingsModel(QObject *parent = 0){}
+    HotelRatingsModel(QObject *parent = 0){
+        Q_UNUSED(parent);
+    }
     void addHotelRating(const HotelRating &hotelRating){
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_items << hotelRating;

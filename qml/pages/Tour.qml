@@ -1,10 +1,14 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.otpusk 1.0
 import "../components"
 
 Page {
 
     id: page
+
+    // already loaded tour data with offers
+    property var tour
     property var hotelId
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
@@ -64,6 +68,15 @@ Page {
                 topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
                 left: isPortrait ? parent.left : photos.right
                 leftMargin: isPortrait ? 0 : Theme.paddingMedium
+            }
+
+            ListView {
+                width: parent.width
+                height: 400
+                model: tour.offers()
+                delegate: Label {
+                    text: model.id + ". " + model.dateFrom + " - " + model.dateTo
+                }
             }
 
             Label{
@@ -288,8 +301,6 @@ Page {
                     }
                 }
             }
-
-
 
         }
 

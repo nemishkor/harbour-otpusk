@@ -3,9 +3,14 @@
 
 #include <QAbstractListModel>
 #include <QStringList>
+#include <QObject>
+#include <QDebug>
+#include "offersmodel.h"
 
-class Tour
+class Tour : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(int id READ id)
 public:
     Tour(
             const int id,
@@ -20,6 +25,7 @@ public:
             const bool isFirst,
             const QString stars,
             const QString photo);
+    Tour(const Tour &tour);
 
     int id() const;
     QString name() const;
@@ -33,6 +39,7 @@ public:
     bool isFirst() const;
     QString stars() const;
     QString photo() const;
+    Q_INVOKABLE OffersModel* offers();
 
 private:
     int m_id;
@@ -48,6 +55,7 @@ private:
     bool m_isFirst;
     QString m_stars;
     QString m_photo;
+    OffersModel m_offers;
 };
 
 class TourModel : public QAbstractListModel
@@ -72,7 +80,8 @@ public:
 
     TourModel(QObject *parent = 0);
 
-    void addTour(const Tour &tour);
+    void addTour(Tour &tour);
+    Q_INVOKABLE Tour *get(int index);
     Q_INVOKABLE void clear();
     Q_INVOKABLE int firstItemIndexOfLastPage();
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

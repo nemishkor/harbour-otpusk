@@ -16,6 +16,8 @@ CONFIG += sailfishapp
 
 SOURCES += src/Otpusk.cpp \
     hotelloader.cpp \
+    offer.cpp \
+    offersmodel.cpp \
     searchparameters.cpp \
     src/datesmodel.cpp \
     src/locationmodel.cpp \
@@ -55,6 +57,8 @@ QT += network
 HEADERS += \
     api.h \
     hotelloader.h \
+    offer.h \
+    offersmodel.h \
     searchparameters.h \
     src/datesmodel.h \
     src/locationmodel.h \

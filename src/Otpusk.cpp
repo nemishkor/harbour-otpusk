@@ -2,6 +2,7 @@
 #include <QtQuick>
 #endif
 
+#include <QtQml>
 #include <sailfishapp.h>
 #include "api.h"
 #include <QString>
@@ -51,6 +52,9 @@ int main(int argc, char *argv[])
     context->setContextProperty("hotel", &hotel);
     HotelLoader hotelLoader(&api, &hotel);
     context->setContextProperty("hotelLoader", &hotelLoader);
+
+    qmlRegisterUncreatableType<Tour>("harbour.otpusk", 1, 0, "TourType", "Pass tour c++ object from list view to separated page");
+    qmlRegisterUncreatableType<OffersModel>("harbour.otpusk", 1, 0, "OffersModel", "To expose offersModel of c++ Tour object to qml");
 
     // If you wish to publish your app on the Jolla harbour, it is recommended
     // that you prefix your internal namespaces with "harbour.".

@@ -24,8 +24,26 @@ Tour::Tour(
       m_currency(currency),
       m_isFirst(isFirst),
       m_stars(stars),
-      m_photo(photo)
+      m_photo(photo),
+      m_offers(nullptr)
 {
+    qDebug("cunstruct tour");
+}
+
+Tour::Tour(const Tour &tour) : QObject(), m_offers(tour.m_offers) {
+    m_id = tour.id();
+    m_name = tour.name();
+    m_city = tour.city();
+    m_country = tour.country();
+    m_ratingAvarage = tour.ratingAvarage();
+    m_ratingCount = tour.ratingCount();
+    m_priceUah = tour.priceUah();
+    m_price = tour.price();
+    m_currency = tour.currency();
+    m_isFirst = tour.isFirst();
+    m_stars = tour.stars();
+    m_photo = tour.photo();
+    qDebug("copy tour");
 }
 
 int Tour::id() const
@@ -88,21 +106,40 @@ QString Tour::photo() const
     return m_photo;
 }
 
+OffersModel* Tour::offers()
+{
+    return &m_offers;
+}
+
 TourModel::TourModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-void TourModel::addTour(const Tour &tour)
+void TourModel::addTour(Tour &tour)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
+//    qDebug("before append");
+//    qDebug(QString("0x%1").arg((quintptr)&tour,
+//                               QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
     m_tours << tour;
+
+//    qDebug("in list");
+//    qDebug(QString("0x%1").arg((quintptr)&m_tours.last(),
+//                               QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
+
     if(tour.isFirst()){
-        qDebug("is first");
+//        qDebug("is first");
         m_firstItemIndexOfLastPage = m_tours.count() - 1;
     }
     endInsertRows();
     emit countChanged();
+}
+
+Tour *TourModel::get(int index)
+{
+    Tour &tour = m_tours[index];
+    return &tour;
 }
 
 void TourModel::clear()
