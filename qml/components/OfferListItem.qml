@@ -8,6 +8,11 @@ Column {
     anchors.leftMargin: Theme.horizontalPageMargin
     spacing: Theme.paddingSmall
 
+    Label {
+        text: "ID: " + model.id
+        font.pixelSize: Theme.fontSizeLarge
+    }
+
     Icon {
         source: "image://theme/icon-m-date"
         color: Theme.highlightColor
@@ -15,8 +20,8 @@ Column {
             anchors {
                 left: parent.right
                 leftMargin: Theme.paddingMedium
+                verticalCenter: parent.verticalCenter
             }
-            verticalAlignment: parent.verticalAlignment
             width: offerItem.width - parent.width - anchors.leftMargin
             text: dateFrom + "   " + dateTo
         }
@@ -29,8 +34,8 @@ Column {
             anchors {
                 left: parent.right
                 leftMargin: Theme.paddingMedium
+                verticalCenter: parent.verticalCenter
             }
-            verticalAlignment: parent.verticalAlignment
             width: offerItem.width - parent.width - anchors.leftMargin
             text: {
                 var text = nights + " "
@@ -53,8 +58,8 @@ Column {
             anchors {
                 left: parent.right
                 leftMargin: Theme.paddingMedium
+                verticalCenter: parent.verticalCenter
             }
-            verticalAlignment: parent.verticalAlignment
             width: offerItem.width - parent.width - anchors.leftMargin
             text: transport
         }
@@ -67,8 +72,8 @@ Column {
             anchors {
                 left: parent.right
                 leftMargin: Theme.paddingMedium
+                verticalCenter: parent.verticalCenter
             }
-            verticalAlignment: parent.verticalAlignment
             width: offerItem.width - parent.width - anchors.leftMargin
             text: {
                 var text = adults + " " + (adults === 1 ? "дорослий" : "дорослих") + " + " + childrenCount + " "
@@ -92,8 +97,8 @@ Column {
             anchors {
                 left: parent.right
                 leftMargin: Theme.paddingMedium
+                verticalCenter: parent.verticalCenter
             }
-            verticalAlignment: parent.verticalAlignment
             width: offerItem.width - parent.width - anchors.leftMargin
             text: roomType + " (" + roomName + ") | " + foodType
         }

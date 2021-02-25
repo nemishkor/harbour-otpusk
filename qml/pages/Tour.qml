@@ -25,12 +25,18 @@ Page {
 
         header: Column {
             width: parent.width
-            height: Theme.paddingMedium * 11 + pageHeader.height + failedMessage.height + photos.height + description.height + location.height + distance.height + ratingsSection.height + ratingGrid.height + servicesHeader.height + servicesButtons.height + servicesButtons2.height + pricesHeader.height
+            height: Theme.paddingMedium * 11 + gap1.height + gap2.height + pageHeader.height + failedMessage.height + photos.height + description.height + location.height + distance.height + ratingsSection.height + ratingGrid.height + servicesHeader.height + servicesButtons.height + servicesButtons2.height + pricesHeader.height
             spacing: Theme.paddingMedium
+
+            Rectangle {
+                id: gap1
+                color: "#00000000"
+                height: Theme.itemSizeLarge / 4 - Theme.paddingMedium
+                width: parent.width
+            }
 
             Label {
                 id: pageHeader
-                y: (isLandscape ? Theme.itemSizeSmall : Theme.itemSizeLarge) / 4
                 width: parent.width - 4 * Theme.horizontalPageMargin - starsIcon.width
                 color: Theme.highlightColor
                 anchors {
@@ -61,6 +67,13 @@ Page {
                     }
                     color: Theme.highlightColor
                 }
+            }
+
+            Rectangle {
+                id: gap2
+                color: "#00000000"
+                height: Theme.itemSizeLarge / 4 - Theme.paddingMedium - Theme.paddingMedium
+                width: parent.width
             }
 
             Label{
