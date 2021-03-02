@@ -26,6 +26,7 @@ SOURCES += src/Otpusk.cpp \
     src/toursloader.cpp
 
 DISTFILES += qml/Otpusk.qml \
+    assets/around.svg \
     qml/components/DatePickerDialog.qml \
     qml/components/HotelListItem.qml \
     qml/components/LocationDialog.qml \
@@ -70,3 +71,6 @@ HEADERS += \
     src/tour.h \
     src/tourmodel.h \
     src/toursloader.h
+
+RESOURCES += \
+    assets.qrc

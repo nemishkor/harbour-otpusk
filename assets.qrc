@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/around.svg</file>
+    </qresource>
+</RCC>
