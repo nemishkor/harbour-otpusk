@@ -37,14 +37,11 @@ void SearchDatesModel::update(int location)
 
 void SearchDatesModel::selectDate(QString date)
 {
-    qDebug(QString(date).prepend("selected date ").toLatin1());
+    qDebug() << "selected date " << date;
     QList<SearchDate>::iterator i;
     for (i = mItems.begin(); i != mItems.end(); ++i){
-        qDebug(QString(i->date()).prepend("iterator ").toLatin1());
         if(i->date() == date){
             mLengths = i->lengths();
-            qDebug("found lengths items: " + QString::number(mLengths.size()).toLatin1());
-            qDebug(mLengths.join(", ").toLatin1());
             emit lengthsChanged();
             return;
         }
@@ -86,9 +83,9 @@ void SearchDatesModel::updateFromApiReply(QNetworkReply *reply){
         return;
     }
     QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
-    qDebug(qPrintable(json.toJson()));
+    qDebug() << json.toJson();
     QJsonObject dates = json.object()["dates"].toObject();
-    qDebug(QString::number(dates.size()).append(" dates received from API").toLatin1());
+    qDebug() << QString::number(dates.size()) << "dates received from API";
     mDates.clear();
     mItems.clear();
     QJsonObject::const_iterator i;
@@ -96,12 +93,11 @@ void SearchDatesModel::updateFromApiReply(QNetworkReply *reply){
     for (i = dates.constBegin(); i != dates.end(); ++i){
         QJsonObject result = (*i).toObject();
         QString date = i.key();
-        qDebug(QString(date).prepend("Added date ").toLatin1());
         mItems.append(SearchDate(date, i.value().toString().split(QChar(','))));
         mDates.append(i.key());
     }
     endInsertRows();
-    qDebug(QString::number(mItems.size()).append(" dates appended").toLatin1());
+    qDebug() << QString::number(mItems.size()) << "dates appended";
     emit countChanged();
     emit datesChanged();
 }

@@ -5,10 +5,11 @@
 #include <QString>
 #include "offersmodel.h"
 
-class Tour : public QObject
+class Tour
+//        : public QObject
 {
-    Q_OBJECT
-    Q_PROPERTY(int id READ id)
+//    Q_OBJECT
+//    Q_PROPERTY(int id READ id)
 public:
     Tour(
             const int id,
@@ -23,7 +24,7 @@ public:
             const bool isFirst,
             const QString stars,
             const QString photo);
-    Tour(const Tour &tour);
+//    Tour(const Tour &tour);
 
     int id() const;
     QString name() const;
@@ -37,7 +38,7 @@ public:
     bool isFirst() const;
     QString stars() const;
     QString photo() const;
-    Q_INVOKABLE OffersModel* offers();
+//    Q_INVOKABLE OffersModel* offers();
 
 private:
     int m_id;
@@ -53,7 +54,7 @@ private:
     bool m_isFirst;
     QString m_stars;
     QString m_photo;
-    OffersModel m_offers;
+//    OffersModel m_offers;
 };
 
 #endif // TOUR_H

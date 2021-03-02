@@ -141,37 +141,37 @@ void ToursLoader::addTour(QJsonObject hotel, bool isFirst)
 //        qDebug(QString("0x%1").arg((quintptr)tour.offers(),
 //                                   QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
 
-    QJsonObject::const_iterator offersIterator;
-    QJsonObject jsonOffers = hotel["offers"].toObject();
-    for (offersIterator = jsonOffers.constBegin(); offersIterator != jsonOffers.constEnd(); offersIterator++){
-        QJsonObject jsonOffer = (*offersIterator).toObject();
+//    QJsonObject::const_iterator offersIterator;
+//    QJsonObject jsonOffers = hotel["offers"].toObject();
+//    for (offersIterator = jsonOffers.constBegin(); offersIterator != jsonOffers.constEnd(); offersIterator++){
+//        QJsonObject jsonOffer = (*offersIterator).toObject();
 
-        QJsonArray jsonIncluded = jsonOffer["o"].toArray();
-        QJsonArray::const_iterator offersIncludedIterator;
-        QStringList included;
-        for (offersIncludedIterator = jsonIncluded.begin(); offersIncludedIterator != jsonIncluded.end(); offersIncludedIterator++){
-            included.append(offersIncludedIterator->toString());
-        }
+//        QJsonArray jsonIncluded = jsonOffer["o"].toArray();
+//        QJsonArray::const_iterator offersIncludedIterator;
+//        QStringList included;
+//        for (offersIncludedIterator = jsonIncluded.begin(); offersIncludedIterator != jsonIncluded.end(); offersIncludedIterator++){
+//            included.append(offersIncludedIterator->toString());
+//        }
 
-        tour.offers()->addOffer(Offer(
-                        jsonOffer["i"].toVariant().toString(),
-                        jsonOffer["last"].toString(),
-                        jsonOffer["ti"].toInt(),
-                        included,
-                        jsonOffer["d"].toString(),
-                        jsonOffer["dt"].toString(),
-                        jsonOffer["y"].toString().toUpper(),
-                        jsonOffer["a"].toInt(),
-                        jsonOffer["h"].toInt(),
-                        jsonOffer["ha"].toString(),
-                        jsonOffer["n"].toInt(),
-                        jsonOffer["f"].toString().toUpper(),
-                        jsonOffer["r"].toString(),
-                        jsonOffer["p"].toDouble(),
-                        jsonOffer["pl"].toDouble(),
-                        jsonOffer["u"].toString(),
-                        jsonOffer["t"].toString()));
-    }
+//        tour.offers()->addOffer(Offer(
+//                        jsonOffer["i"].toVariant().toString(),
+//                        jsonOffer["last"].toString(),
+//                        jsonOffer["ti"].toInt(),
+//                        included,
+//                        jsonOffer["d"].toString(),
+//                        jsonOffer["dt"].toString(),
+//                        jsonOffer["y"].toString().toUpper(),
+//                        jsonOffer["a"].toInt(),
+//                        jsonOffer["h"].toInt(),
+//                        jsonOffer["ha"].toString(),
+//                        jsonOffer["n"].toInt(),
+//                        jsonOffer["f"].toString().toUpper(),
+//                        jsonOffer["r"].toString(),
+//                        jsonOffer["p"].toDouble(),
+//                        jsonOffer["pl"].toDouble(),
+//                        jsonOffer["u"].toString(),
+//                        jsonOffer["t"].toString()));
+//    }
 
 //        qDebug(QString("Added offers to tour: ").append(QString::number(tour.offers()->rowCount())).toLatin1());
 

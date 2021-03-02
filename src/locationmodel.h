@@ -116,7 +116,6 @@ private slots:
       beginInsertRows(QModelIndex(), 0, response.size());
       for (i = response.constBegin(); i != response.end(); ++i){
           QJsonObject result = (*i).toObject();
-          qDebug("append item");
           mItems.append(Location(result["id"].toString().toInt(), result["name"].toString()));
       }
 //      qDebug("iserted " + QString::number(mItems.count()).toLatin1() + " locations");

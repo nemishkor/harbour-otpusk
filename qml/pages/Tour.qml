@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.otpusk 1.0
+//import harbour.otpusk 1.0
 import "../components"
 
 Page {
@@ -8,7 +8,7 @@ Page {
     id: page
 
     // already loaded tour data with offers
-    property var tour
+//    property var tour
     property var hotelId
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
@@ -22,10 +22,10 @@ Page {
         contentHeight: column.height + Theme.paddingMedium
 
         PullDownMenu {
-            MenuItem {
-                text: "Показати більше цін"
-                onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"), {offers: tour.offers()})
-            }
+//            MenuItem {
+//                text: "Показати більше цін"
+//                onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"), {offers: tour.offers()})
+//            }
             MenuItem {
                 text: "Купити на Otpusk.com"
             }

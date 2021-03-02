@@ -24,27 +24,28 @@ Tour::Tour(
       m_currency(currency),
       m_isFirst(isFirst),
       m_stars(stars),
-      m_photo(photo),
-      m_offers(nullptr)
+      m_photo(photo)
+//    ,
+//      m_offers(nullptr)
 {
     qDebug("cunstruct tour");
 }
 
-Tour::Tour(const Tour &tour) : QObject(), m_offers(tour.m_offers) {
-    m_id = tour.id();
-    m_name = tour.name();
-    m_city = tour.city();
-    m_country = tour.country();
-    m_ratingAvarage = tour.ratingAvarage();
-    m_ratingCount = tour.ratingCount();
-    m_priceUah = tour.priceUah();
-    m_price = tour.price();
-    m_currency = tour.currency();
-    m_isFirst = tour.isFirst();
-    m_stars = tour.stars();
-    m_photo = tour.photo();
-    qDebug("copy tour");
-}
+//Tour::Tour(const Tour &tour) : QObject(), m_offers(tour.m_offers) {
+//    m_id = tour.id();
+//    m_name = tour.name();
+//    m_city = tour.city();
+//    m_country = tour.country();
+//    m_ratingAvarage = tour.ratingAvarage();
+//    m_ratingCount = tour.ratingCount();
+//    m_priceUah = tour.priceUah();
+//    m_price = tour.price();
+//    m_currency = tour.currency();
+//    m_isFirst = tour.isFirst();
+//    m_stars = tour.stars();
+//    m_photo = tour.photo();
+//    qDebug("copy tour");
+//}
 
 int Tour::id() const
 {
@@ -106,7 +107,7 @@ QString Tour::photo() const
     return m_photo;
 }
 
-OffersModel* Tour::offers()
-{
-    return &m_offers;
-}
+//OffersModel* Tour::offers()
+//{
+//    return &m_offers;
+//}
