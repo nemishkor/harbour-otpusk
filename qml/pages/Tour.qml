@@ -17,19 +17,26 @@ Page {
     Component.onCompleted: hotelLoader.load(hotelId)
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaListView {
-        anchors.fill: parent        
-        spacing: Theme.paddingMedium
-        delegate: OfferListItem {}
-        model: tour.offers()
+    SilicaFlickable {
+        anchors.fill: parent
+        contentHeight: column.height + Theme.paddingMedium
 
-        header: Column {
+        PullDownMenu {
+            MenuItem {
+                text: "Показати більше цін"
+                onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"), {offers: tour.offers()})
+            }
+            MenuItem {
+                text: "Купити на Otpusk.com"
+            }
+        }
+
+        Column {
+            id: column
             width: parent.width
-            height: Theme.paddingMedium * 11 + gap1.height + gap2.height + pageHeader.height + failedMessage.height + photos.height + description.height + location.height + distance.height + ratingsSection.height + ratingGrid.height + servicesHeader.height + servicesButtons.height + servicesButtons2.height + pricesHeader.height
             spacing: Theme.paddingMedium
 
             Rectangle {
-                id: gap1
                 color: "#00000000"
                 height: Theme.itemSizeLarge / 4 - Theme.paddingMedium
                 width: parent.width
@@ -70,7 +77,6 @@ Page {
             }
 
             Rectangle {
-                id: gap2
                 color: "#00000000"
                 height: Theme.itemSizeLarge / 4 - Theme.paddingMedium - Theme.paddingMedium
                 width: parent.width
@@ -306,11 +312,6 @@ Page {
                         wrapMode: "WordWrap"
                     }
                 }
-            }
-
-            SectionHeader {
-                id: pricesHeader
-                text: "Ціни та варіанти туру"
             }
 
         }

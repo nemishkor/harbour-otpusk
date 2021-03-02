@@ -21,7 +21,9 @@ SOURCES += src/Otpusk.cpp \
     searchparameters.cpp \
     src/datesmodel.cpp \
     src/locationmodel.cpp \
-    src/tourmodel.cpp
+    src/tour.cpp \
+    src/tourmodel.cpp \
+    src/toursloader.cpp
 
 DISTFILES += qml/Otpusk.qml \
     qml/components/DatePickerDialog.qml \
@@ -32,6 +34,7 @@ DISTFILES += qml/Otpusk.qml \
     qml/components/Price.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Home.qml \
+    qml/pages/Offers.qml \
     qml/pages/SearchForm.qml \
     qml/pages/SearchResults.qml \
     qml/pages/Tour.qml \
@@ -64,5 +67,6 @@ HEADERS += \
     searchparameters.h \
     src/datesmodel.h \
     src/locationmodel.h \
+    src/tour.h \
     src/tourmodel.h \
     src/toursloader.h
