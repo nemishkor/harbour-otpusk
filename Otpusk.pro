@@ -15,12 +15,12 @@ TARGET = Otpusk
 CONFIG += sailfishapp
 
 SOURCES += src/Otpusk.cpp \
-    offer.cpp \
-    offersmodel.cpp \
-    searchparameters.cpp \
     src/datesmodel.cpp \
     src/hotelloader.cpp \
     src/locationmodel.cpp \
+    src/offer.cpp \
+    src/offersmodel.cpp \
+    src/searchparameters.cpp \
     src/tour.cpp \
     src/tourmodel.cpp \
     src/toursloader.cpp
@@ -60,13 +60,13 @@ TRANSLATIONS += translations/Otpusk-de.ts
 QT += network
 
 HEADERS += \
-    api.h \
-    offer.h \
-    offersmodel.h \
-    searchparameters.h \
+    src/api.h \
     src/datesmodel.h \
     src/hotelloader.h \
     src/locationmodel.h \
+    src/offer.h \
+    src/offersmodel.h \
+    src/searchparameters.h \
     src/tour.h \
     src/tourmodel.h \
     src/toursloader.h
