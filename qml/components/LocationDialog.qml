@@ -32,14 +32,22 @@ Dialog {
         model: locationModel
         anchors.fill: parent
         currentIndex: -1 // otherwise currentItem will steal focus
-        header:  SearchField {
-            id: locationSearchField
+        header:  Column {
             width: parent.width
 
-            Binding {
-                target: locationDialog
-                property: "searchString"
-                value: locationSearchField.text.toLowerCase().trim()
+            PageHeader {
+                title: "Виберіть місце подорожі"
+            }
+
+            SearchField {
+                id: locationSearchField
+                width: parent.width
+
+                Binding {
+                    target: locationDialog
+                    property: "searchString"
+                    value: locationSearchField.text.toLowerCase().trim()
+                }
             }
         }
 
