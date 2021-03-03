@@ -3,6 +3,7 @@
 #endif
 
 #include <QtQml>
+#include <QtQuick>
 #include <sailfishapp.h>
 #include "api.h"
 #include <QString>
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 
 
     // Start the application.
-    view->setSource(SailfishApp::pathTo("qml/Otpusk.qml"));
+    view->setSource(SailfishApp::pathTo("qml/harbour-otpusk.qml"));
     view->show();
     return app->exec();
 }

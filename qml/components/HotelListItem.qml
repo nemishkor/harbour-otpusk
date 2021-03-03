@@ -72,7 +72,7 @@ ListItem{
                 font.pixelSize: Theme.fontSizeMedium
                 width: root.width - progressCircle.width - starsLabel.width - starsIcon.width - Theme.horizontalPageMargin
                 color: Theme.highlightColor
-                text: model.priceId + name
+                text: name
                 truncationMode: TruncationMode.Fade
 
                 ProgressCircle {

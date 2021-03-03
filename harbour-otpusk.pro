@@ -10,12 +10,13 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = Otpusk
+TARGET = harbour-otpusk
 
 CONFIG += sailfishapp
 
-SOURCES += src/Otpusk.cpp \
+SOURCES += \
     src/datesmodel.cpp \
+    src/harbour-otpusk.cpp \
     src/hotelloader.cpp \
     src/locationmodel.cpp \
     src/offer.cpp \
@@ -25,10 +26,15 @@ SOURCES += src/Otpusk.cpp \
     src/tourmodel.cpp \
     src/toursloader.cpp
 
-DISTFILES += qml/Otpusk.qml \
+DISTFILES += \
     assets/around.svg \
     assets/icon.png \
     assets/icon.svg \
+    harbour-otpusk.desktop \
+    icons/108x108/harbour-otpusk.png \
+    icons/128x128/harbour-otpusk.png \
+    icons/172x172/harbour-otpusk.png \
+    icons/86x86/harbour-otpusk.png \
     qml/components/DatePickerDialog.qml \
     qml/components/HotelListItem.qml \
     qml/components/LocationDialog.qml \
@@ -36,29 +42,29 @@ DISTFILES += qml/Otpusk.qml \
     qml/components/Photos.qml \
     qml/components/Price.qml \
     qml/cover/CoverPage.qml \
+    qml/harbour-otpusk.qml \
     qml/pages/Home.qml \
     qml/pages/Offers.qml \
     qml/pages/SearchForm.qml \
     qml/pages/SearchResults.qml \
     qml/pages/Tour.qml \
-    rpm/Otpusk.changes.in \
-    rpm/Otpusk.changes.run.in \
-    rpm/Otpusk.spec \
-    rpm/Otpusk.yaml \
-    translations/*.ts \
-    Otpusk.desktop
+    rpm/harbour-otpusk.changes.in \
+    rpm/harbour-otpusk.changes.run.in \
+    rpm/harbour-otpusk.spec \
+    rpm/harbour-otpusk.yaml \
+    translations/*.ts
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
 # to disable building translations every time, comment out the
 # following CONFIG line
-CONFIG += sailfishapp_i18n
+#CONFIG += sailfishapp_i18n
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-TRANSLATIONS += translations/Otpusk-de.ts
+TRANSLATIONS += translations/harbour-otpusk-de.ts
 
 QT += network
 
