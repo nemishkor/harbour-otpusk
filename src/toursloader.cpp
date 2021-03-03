@@ -121,6 +121,13 @@ int ToursLoader::calculateProgress(QJsonDocument *json) {
 
 void ToursLoader::addTour(QJsonObject hotel, bool isFirst)
 {
+    QString priceId("");
+    QJsonObject::const_iterator offersIterator;
+    QJsonObject jsonOffers = hotel["offers"].toObject();
+    for (offersIterator = jsonOffers.constBegin(); priceId == ""; offersIterator++){
+        priceId = (*offersIterator).toObject()["i"].toVariant().toString();
+    }
+
     Tour tour(hotel["i"].toInt(),
             hotel["n"].toString(),
             hotel["c"].toObject()["n"].toString(),
@@ -132,7 +139,8 @@ void ToursLoader::addTour(QJsonObject hotel, bool isFirst)
             hotel["pu"].toString(),
             isFirst,
             hotel["s"].toString(),
-            hotel["f"].toString());
+            hotel["f"].toString(),
+            priceId);
 
 //        qDebug("creating");
 //        qDebug(tour.name().toLatin1());

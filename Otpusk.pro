@@ -27,6 +27,8 @@ SOURCES += src/Otpusk.cpp \
 
 DISTFILES += qml/Otpusk.qml \
     assets/around.svg \
+    assets/icon.png \
+    assets/icon.svg \
     qml/components/DatePickerDialog.qml \
     qml/components/HotelListItem.qml \
     qml/components/LocationDialog.qml \

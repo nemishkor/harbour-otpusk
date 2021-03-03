@@ -79,6 +79,8 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
         return tour.stars();
     if (role == PhotoRole)
         return tour.photo();
+    if (role == PriceIdRole)
+        return tour.priceId();
     return QVariant();
 }
 QHash<int, QByteArray> TourModel::roleNames() const {
@@ -95,5 +97,6 @@ QHash<int, QByteArray> TourModel::roleNames() const {
     roles[IsFirstRole] = "isFirst";
     roles[StarsRole] = "stars";
     roles[PhotoRole] = "photo";
+    roles[PriceIdRole] = "priceId";
     return roles;
 }

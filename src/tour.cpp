@@ -12,7 +12,8 @@ Tour::Tour(
         const QString currency,
         const bool isFirst,
         const QString stars,
-        const QString photo)
+        const QString photo,
+        const QString priceId)
     : m_id(id),
       m_name(name),
       m_city(city),
@@ -24,7 +25,8 @@ Tour::Tour(
       m_currency(currency),
       m_isFirst(isFirst),
       m_stars(stars),
-      m_photo(photo)
+      m_photo(photo),
+      m_priceId(priceId)
 //    ,
 //      m_offers(nullptr)
 {
@@ -105,6 +107,11 @@ QString Tour::stars() const
 QString Tour::photo() const
 {
     return m_photo;
+}
+
+QString Tour::priceId() const
+{
+    return m_priceId;
 }
 
 //OffersModel* Tour::offers()

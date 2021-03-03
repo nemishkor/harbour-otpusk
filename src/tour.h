@@ -23,7 +23,8 @@ public:
             const QString currency,
             const bool isFirst,
             const QString stars,
-            const QString photo);
+            const QString photo,
+            const QString priceId);
 //    Tour(const Tour &tour);
 
     int id() const;
@@ -38,6 +39,7 @@ public:
     bool isFirst() const;
     QString stars() const;
     QString photo() const;
+    QString priceId() const;
 //    Q_INVOKABLE OffersModel* offers();
 
 private:
@@ -54,6 +56,7 @@ private:
     bool m_isFirst;
     QString m_stars;
     QString m_photo;
+    QString m_priceId;
 //    OffersModel m_offers;
 };
 

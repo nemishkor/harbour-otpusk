@@ -11,6 +11,10 @@ ListItem{
             Qt.resolvedUrl("../pages/Tour.qml"),
             {
 //                tour: toursLoader.tourModel.get(index),
+                price: model.price,
+                priceUah: model.priceUah,
+                currency: model.currency,
+                priceId: model.priceId,
                 hotelId: model.id
             }
         )
@@ -68,7 +72,7 @@ ListItem{
                 font.pixelSize: Theme.fontSizeMedium
                 width: root.width - progressCircle.width - starsLabel.width - starsIcon.width - Theme.horizontalPageMargin
                 color: Theme.highlightColor
-                text: name
+                text: model.priceId + name
                 truncationMode: TruncationMode.Fade
 
                 ProgressCircle {

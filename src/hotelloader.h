@@ -226,7 +226,9 @@ private:
 class Hotel : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString id READ id NOTIFY idChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(QString distance READ distance NOTIFY distanceChanged)
     Q_PROPERTY(QString city READ city NOTIFY cityChanged)
@@ -244,6 +246,15 @@ class Hotel : public QObject
 public:
     Hotel(){}
 
+    QString id() const{
+        return m_id;
+    }
+    void setId(QString id){
+        if(id != m_id){
+            m_id = id;
+            emit idChanged();
+        }
+    }
     QString name() const{
         return m_name;
     }
@@ -251,6 +262,15 @@ public:
         if(name != m_name){
             m_name = name;
             emit nameChanged();
+        }
+    }
+    QString alias() const{
+        return m_alias;
+    }
+    void setAlias(QString alias){
+        if(alias != m_alias){
+            m_alias = alias;
+            emit aliasChanged();
         }
     }
     QString description() const{
@@ -343,7 +363,9 @@ public:
     }
 
 private:
+    QString m_id;
     QString m_name;
+    QString m_alias;
     QString m_description;
     QString m_distance;
     QString m_city;
@@ -360,7 +382,9 @@ private:
     HotelRatingsModel m_hotelRatings;
 
 signals:
+    void idChanged();
     void nameChanged();
+    void aliasChanged();
     void descriptionChanged();
     void distanceChanged();
     void cityChanged();

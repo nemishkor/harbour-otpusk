@@ -9,6 +9,10 @@ Page {
 
     // already loaded tour data with offers
 //    property var tour
+    property var price
+    property var priceUah
+    property var currency
+    property var priceId
     property var hotelId
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
@@ -27,7 +31,8 @@ Page {
 //                onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"), {offers: tour.offers()})
 //            }
             MenuItem {
-                text: "Купити на Otpusk.com"
+                text: "Замовити на Otpusk.com"
+                onClicked: Qt.openUrlExternally("https://www.otpusk.com/hotel/" + hotel.id + "-" + hotel.alias + "/" + page.priceId + "/")
             }
         }
 
@@ -96,6 +101,12 @@ Page {
             Photos {
                 id: photos
                 photos: hotel.photos
+            }
+
+            Price {
+                price: page.price
+                priceUah: page.priceUah
+                currency: page.currency
             }
 
             Label {

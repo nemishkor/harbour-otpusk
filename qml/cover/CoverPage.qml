@@ -3,20 +3,6 @@ import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 
 CoverBackground {
-    Image {
-        id: bgImage
-        visible: hotelPhoto.status !== Image.Ready
-        anchors.centerIn: parent
-        source: "qrc:///assets/around.svg"
-        width: Math.floor(parent.width * 0.8)
-        height: Math.floor(parent.width * 0.8)
-    }
-    ColorOverlay {
-        visible: hotelPhoto.status !== Image.Ready
-        anchors.fill: bgImage
-        source: bgImage
-        color: Theme.secondaryHighlightColor
-    }
     Label {
         id: title
         anchors.top: parent.top
@@ -43,7 +29,13 @@ CoverBackground {
         anchors.left: parent.left
         anchors.leftMargin: Theme.horizontalPageMargin
         width: parent.width - Theme.horizontalPageMargin * 2
-        height: Math.floor(600 * width / 800)
-        source: hotel.name === "" ? null : "https://newimg.otpusk.com/2/800x600/" + hotel.photos[0]
+        height: hotel.photos[0] === undefined ? width : Math.floor(600 * width / 800)
+        source: hotel.photos[0] === undefined ? "qrc:///assets/around.svg" : "https://newimg.otpusk.com/2/800x600/" + hotel.photos[0]
+    }
+    ColorOverlay {
+        visible: hotel.photos[0] === undefined
+        anchors.fill: hotelPhoto
+        source: hotelPhoto
+        color: Theme.secondaryHighlightColor
     }
 }

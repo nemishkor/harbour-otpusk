@@ -64,7 +64,9 @@ void HotelLoader::handleReply(QNetworkReply *reply){
         }
         QJsonObject responseHotel = responseObj["hotel"].toObject();
 
+        hotel->setId(responseHotel["i"].toString());
         hotel->setName(responseHotel["nm"].toString());
+        hotel->setAlias(responseHotel["h"].toString());
         hotel->setDescription(responseHotel["o"].toObject()["dc"].toString());
         hotel->setDistance(responseHotel["o"].toObject()["di"].toString());
         hotel->setCity(responseHotel["c"].toObject()["n"].toString());

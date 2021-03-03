@@ -25,7 +25,8 @@ public:
         CurrencyRole,
         IsFirstRole,
         StarsRole,
-        PhotoRole
+        PhotoRole,
+        PriceIdRole
     };
 
     TourModel(QObject *parent = 0);
