@@ -116,16 +116,14 @@ ListItem {
                     anchors.fill: parent
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    text: root.ratingCount > 0 ? ratingCount : "-"
                     font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
                     color: root.ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
+                    text: root.ratingCount > 0 ? ratingCount : "-"
                 }
                 Label{
                     id: ratingAvarageLabel
                     visible: root.ratingCount > 0
-                    anchors.top: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    anchors { top: parent.bottom; left: parent.left; right: parent.right }
                     horizontalAlignment: Text.AlignHCenter
                     text: root.ratingAvarage + "/10"
                     font.pixelSize: Theme.fontSizeSmall

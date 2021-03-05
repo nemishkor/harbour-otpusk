@@ -183,9 +183,9 @@ Page {
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: model.count > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                            font.weight: model.name === "_total" ? Font.Bold : Font.Normal
                             color: model.count < 10 ? "#80EC4713" : ratingLabel.color
                             text: model.count > 0 ? model.count : "-"
-                            font.weight: model.name === "_total" ? Font.Bold : Font.Normal
                         }
                     }
                     Label{
