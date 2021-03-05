@@ -59,6 +59,7 @@ ListItem {
     Column {
         id: infoColumn
         spacing: Theme.paddingSmall
+        width: parent.width - anchors.leftMargin
         anchors {
             top: isPortrait ? mainImage.bottom : mainImage.top
             topMargin: isPortrait ? Theme.paddingMedium : Theme.paddingSmall
@@ -66,65 +67,71 @@ ListItem {
             leftMargin: isPortrait ? 0 : Theme.paddingMedium
         }
 
-        Row {
+        Item {
             height: Theme.fontSizeMedium + 2 * Theme.paddingSmall
-            Label {
-                id: starsLabel
-                text: root.stars
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.highlightColor
-                leftPadding: Theme.horizontalPageMargin + Theme.paddingSmall
-            }
-            Icon {
-                id: starsIcon
-                source: "image://theme/icon-s-favorite"
-                anchors.verticalCenter: starsLabel.verticalCenter
-                color: Theme.highlightColor
-            }
-            Label {
-                leftPadding: Theme.paddingMedium
-                font.pixelSize: Theme.fontSizeMedium
-                width: root.width - progressCircle.width - starsLabel.width - starsIcon.width - Theme.horizontalPageMargin
-                color: Theme.highlightColor
-                text: root.name
-                truncationMode: TruncationMode.Fade
+            width: parent.width - 2 * Theme.horizontalPageMargin
+            x: Theme.horizontalPageMargin
 
-                ProgressCircle {
-                    id: progressCircle
-                    anchors.left: parent.right
-                    anchors.top: parent.top
-                    progressValue: root.ratingAvarage / 10
-                    backgroundColor: "#80000000"
-                    opacity: root.highlighted ? 0.5 : 1.0
-                    progressColor: {
-                        if(root.ratingAvarage === 0)
-                            return "#807B7B7B"
-                        if(root.ratingAvarage > 6)
-                            return "#8051D511"
-                        if(root.ratingAvarage > 4)
-                            return "#80DEB321"
-                        return "#80EC4713"
-                    }
-                    Label{
-                        anchors.fill: parent
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        text: root.ratingCount > 0 ? ratingCount : "-"
-                        font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
-                        color: root.ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
-                    }
-                    Label{
-                        id: ratingAvarageLabel
-                        visible: root.ratingCount > 0
-                        anchors.top: parent.bottom
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        horizontalAlignment: Text.AlignHCenter
-                        text: root.ratingAvarage + "/10"
-                        font.pixelSize: Theme.fontSizeSmall
-                    }
+            Row {
+                height: parent.height
+                width: parent.width - progressCircle.width
+                Label {
+                    id: starsLabel
+                    text: root.stars
+                    font.pixelSize: Theme.fontSizeMedium
+                    color: Theme.highlightColor
+                }
+                Icon {
+                    id: starsIcon
+                    source: "image://theme/icon-s-favorite"
+                    anchors.verticalCenter: starsLabel.verticalCenter
+                    color: Theme.highlightColor
+                }
+                Label {
+                    font.pixelSize: Theme.fontSizeMedium
+                    width: parent.width - starsLabel.width - starsIcon.width - Theme.paddingSmall
+                    color: Theme.highlightColor
+                    text: root.name
+                    truncationMode: TruncationMode.Fade
                 }
             }
+
+            ProgressCircle {
+                id: progressCircle
+                anchors.right: parent.right
+                anchors.top: parent.top
+                progressValue: root.ratingAvarage / 10
+                backgroundColor: "#80000000"
+                opacity: root.highlighted ? 0.5 : 1.0
+                progressColor: {
+                    if(root.ratingAvarage === 0)
+                        return "#807B7B7B"
+                    if(root.ratingAvarage > 6)
+                        return "#8051D511"
+                    if(root.ratingAvarage > 4)
+                        return "#80DEB321"
+                    return "#80EC4713"
+                }
+                Label{
+                    anchors.fill: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.ratingCount > 0 ? ratingCount : "-"
+                    font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                    color: root.ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
+                }
+                Label{
+                    id: ratingAvarageLabel
+                    visible: root.ratingCount > 0
+                    anchors.top: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.ratingAvarage + "/10"
+                    font.pixelSize: Theme.fontSizeSmall
+                }
+            }
+
         }
 
         Icon {

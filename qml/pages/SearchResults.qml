@@ -6,7 +6,7 @@ Page {
     id: page
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
-    allowedOrientations: Orientation.All
+    allowedOrientations: Orientation.Portrait
 
 
     // Begin loader part
