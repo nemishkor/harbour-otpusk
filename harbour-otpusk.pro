@@ -36,11 +36,11 @@ DISTFILES += \
     icons/172x172/harbour-otpusk.png \
     icons/86x86/harbour-otpusk.png \
     qml/components/DatePickerDialog.qml \
-    qml/components/HotelListItem.qml \
     qml/components/LocationDialog.qml \
     qml/components/OfferListItem.qml \
     qml/components/Photos.qml \
     qml/components/Price.qml \
+    qml/components/TourListItem.qml \
     qml/cover/CoverPage.qml \
     qml/harbour-otpusk.qml \
     qml/pages/Home.qml \

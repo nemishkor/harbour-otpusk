@@ -1,7 +1,21 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-ListItem{
+ListItem {
+
+    property int hotelId
+    property double price
+    property double priceUah
+    property string currency
+    property string priceId
+    property string photo
+    property string stars
+    property string name
+    property double ratingAvarage
+    property int ratingCount
+    property string country
+    property string city
+
     id: root
     contentHeight: moreResultsLabel.height + mainImage.height + (isPortrait ? infoColumn.height : 0) + separator.height + 2 * Theme.paddingLarge
     contentWidth: parent.width
@@ -11,11 +25,11 @@ ListItem{
             Qt.resolvedUrl("../pages/Tour.qml"),
             {
 //                tour: toursLoader.tourModel.get(index),
-                price: model.price,
-                priceUah: model.priceUah,
-                currency: model.currency,
-                priceId: model.priceId,
-                hotelId: model.id
+                price: root.price,
+                priceUah: root.priceUah,
+                currency: root.currency,
+                priceId: root.priceId,
+                hotelId: root.hotelId
             }
         )
     }
@@ -36,7 +50,7 @@ ListItem{
         id: mainImage
         anchors.top: moreResultsLabel.bottom
         anchors.topMargin: moreResultsLabel.visible ? Theme.paddingMedium : 0
-        source: "https://newimg.otpusk.com/2/800x600/" + photo
+        source: "https://newimg.otpusk.com/2/800x600/" + root.photo
         width: isPortrait ? parent.width : (parent.width / 2 - 2 * Theme.horizontalPageMargin)
         height: width * 600 / 800
         opacity: root.highlighted ? 0.5 : 1.0
@@ -56,7 +70,7 @@ ListItem{
             height: Theme.fontSizeMedium + 2 * Theme.paddingSmall
             Label {
                 id: starsLabel
-                text: stars
+                text: root.stars
                 font.pixelSize: Theme.fontSizeMedium
                 color: Theme.highlightColor
                 leftPadding: Theme.horizontalPageMargin + Theme.paddingSmall
@@ -72,22 +86,22 @@ ListItem{
                 font.pixelSize: Theme.fontSizeMedium
                 width: root.width - progressCircle.width - starsLabel.width - starsIcon.width - Theme.horizontalPageMargin
                 color: Theme.highlightColor
-                text: name
+                text: root.name
                 truncationMode: TruncationMode.Fade
 
                 ProgressCircle {
                     id: progressCircle
                     anchors.left: parent.right
                     anchors.top: parent.top
-                    progressValue: ratingAvarage / 10
+                    progressValue: root.ratingAvarage / 10
                     backgroundColor: "#80000000"
                     opacity: root.highlighted ? 0.5 : 1.0
                     progressColor: {
-                        if(ratingAvarage === 0)
+                        if(root.ratingAvarage === 0)
                             return "#807B7B7B"
-                        if(ratingAvarage > 6)
+                        if(root.ratingAvarage > 6)
                             return "#8051D511"
-                        if(ratingAvarage > 4)
+                        if(root.ratingAvarage > 4)
                             return "#80DEB321"
                         return "#80EC4713"
                     }
@@ -95,18 +109,18 @@ ListItem{
                         anchors.fill: parent
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
-                        text: ratingCount > 0 ? ratingCount : "-"
+                        text: root.ratingCount > 0 ? ratingCount : "-"
                         font.pixelSize: ratingCount > 999 ? Theme.fontSizeSmall : Theme.fontSizeMedium
-                        color: ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
+                        color: root.ratingCount < 10 ? "#80EC4713" : ratingAvarageLabel.color
                     }
                     Label{
                         id: ratingAvarageLabel
-                        visible: ratingCount > 0
+                        visible: root.ratingCount > 0
                         anchors.top: parent.bottom
                         anchors.left: parent.left
                         anchors.right: parent.right
                         horizontalAlignment: Text.AlignHCenter
-                        text: ratingAvarage + "/10"
+                        text: root.ratingAvarage + "/10"
                         font.pixelSize: Theme.fontSizeSmall
                     }
                 }
@@ -120,7 +134,7 @@ ListItem{
             Label {
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.secondaryColor
-                text: country + ", " + city
+                text: root.country + ", " + root.city
                 anchors.left: parent.right
                 width: root.width - 2 * Theme.horizontalPageMargin - parent.width
                 anchors.verticalCenter: parent.verticalCenter
@@ -129,9 +143,9 @@ ListItem{
         }
 
         Price {
-            price: model.price
-            priceUah: model.priceUah
-            currency: model.currency
+            price: root.price
+            priceUah: root.priceUah
+            currency: root.currency
         }
 
     }

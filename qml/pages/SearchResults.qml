@@ -125,7 +125,20 @@ Page {
                     return 1.0
                 }
 
-                delegate: HotelListItem{}
+                delegate: TourListItem {
+                    hotelId: model.id
+                    price: model.price
+                    priceUah: model.priceUah
+                    currency: model.currency
+                    priceId: model.priceId
+                    photo: model.photo
+                    stars: model.stars
+                    name: model.name
+                    ratingAvarage: model.ratingAvarage
+                    ratingCount: model.ratingCount
+                    country: model.country
+                    city: model.city
+                }
 
             }
 
