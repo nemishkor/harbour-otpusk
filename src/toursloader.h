@@ -43,6 +43,7 @@ public:
     int getPage();
     void setPage(int _page);
     int calculateProgress(QJsonDocument *json);
+    Q_INVOKABLE void fillOffersModelFromResponse(int hotelId, OffersModel *offersModel);
 
 private:
     Api *api;
@@ -55,7 +56,9 @@ private:
     QString replyErrorText;
     int page = 1;
     SearchParameters *currentSearchParameters;
+    QJsonObject lastToursReply;
     void addTour(QJsonObject hotel, bool isFirst);
+    Offer getFirstOfferOfTour(QJsonObject *tour);
 
 private slots:
     void handleSearchReply(QNetworkReply *reply);

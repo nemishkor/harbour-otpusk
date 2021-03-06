@@ -7,34 +7,34 @@ Page {
 
     id: page
 
-    // already loaded tour data with offers
-//    property var tour
-    property var price
-    property var priceUah
-    property var currency
-    property var priceId
     property var hotelId
+    property string offerId
+    property string dateFrom
+    property string dateTo
+    property string roomType
+    property int adults
+    property int childrenCount
+    property var childrenAges
+    property int nights
+    property string foodType
+    property string roomName
+    property double priceUah
+    property double price
+    property string currency
+    property string transport
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.Portrait
 
-    Component.onCompleted: hotelLoader.load(hotelId)
+    Component.onCompleted: {
+        hotelLoader.load(hotelId)
+        toursLoader.fillOffersModelFromResponse(hotelId, offersModel)
+    }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height + Theme.paddingMedium
-
-        PullDownMenu {
-//            MenuItem {
-//                text: "Показати більше цін"
-//                onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"), {offers: tour.offers()})
-//            }
-            MenuItem {
-                text: "Замовити на Otpusk.com"
-                onClicked: Qt.openUrlExternally("https://www.otpusk.com/hotel/" + hotel.id + "-" + hotel.alias + "/" + page.priceId + "/")
-            }
-        }
 
         Column {
             id: column
@@ -103,10 +103,30 @@ Page {
                 photos: hotel.photos
             }
 
-            Price {
+            OfferListItem {
+                offerId: page.offerId
+                dateFrom: page.dateFrom
+                dateTo: page.dateTo
+                roomType: page.roomType
+                adults: page.adults
+                childrenCount: page.childrenCount
+                childrenAges: page.childrenAges
+                nights: page.nights
+                foodType: page.foodType
+                roomName: page.roomName
                 price: page.price
                 priceUah: page.priceUah
                 currency: page.currency
+                transport: page.transport
+                hideSeparator: true
+            }
+
+            ButtonLayout {
+                visible: offersModel.rowCount() > 1
+                Button {
+                    text: "Показати більше цін (" + offersModel.rowCount() + ")"
+                    onClicked: pageStack.animatorPush(Qt.resolvedUrl("Offers.qml"))
+                }
             }
 
             Label {

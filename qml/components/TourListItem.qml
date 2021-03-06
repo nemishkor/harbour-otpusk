@@ -4,10 +4,6 @@ import Sailfish.Silica 1.0
 ListItem {
 
     property int hotelId
-    property double price
-    property double priceUah
-    property string currency
-    property string priceId
     property string photo
     property string stars
     property string name
@@ -15,6 +11,21 @@ ListItem {
     property int ratingCount
     property string country
     property string city
+
+    property string offerId
+    property string dateFrom
+    property string dateTo
+    property string roomType
+    property int adults
+    property int childrenCount
+    property var childrenAges
+    property int nights
+    property string foodType
+    property string roomName
+    property double priceUah
+    property double price
+    property string currency
+    property string transport
 
     id: root
     contentHeight: moreResultsLabel.height + mainImage.height + (isPortrait ? infoColumn.height : 0) + separator.height + 2 * Theme.paddingLarge
@@ -25,11 +36,21 @@ ListItem {
             Qt.resolvedUrl("../pages/Tour.qml"),
             {
 //                tour: toursLoader.tourModel.get(index),
-                price: root.price,
-                priceUah: root.priceUah,
-                currency: root.currency,
-                priceId: root.priceId,
-                hotelId: root.hotelId
+                hotelId: root.hotelId,
+                offerId: model.offerId,
+                dateFrom: model.dateFrom,
+                dateTo: model.dateTo,
+                roomType: model.roomType,
+                adults: model.adults,
+                childrenCount: model.childrenCount,
+                childrenAges: model.childrenAges,
+                nights: model.nights,
+                foodType: model.foodType,
+                roomName: model.roomName,
+                price: model.price,
+                priceUah: model.priceUah,
+                currency: model.currency,
+                transport: model.transport
             }
         )
     }
@@ -148,9 +169,9 @@ ListItem {
         }
 
         Price {
-            price: root.price
-            priceUah: root.priceUah
-            currency: root.currency
+            priceUah: model.priceUah
+            price: model.price
+            currency: model.currency
         }
 
     }

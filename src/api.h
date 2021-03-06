@@ -44,6 +44,7 @@ public:
         QUrlQuery query = QUrlQuery(url.query());
         query.addQueryItem("text", text);
         query.addQueryItem("lang", "ukr");
+        query.addQueryItem("with", "price");
         query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
         url.setQuery(query);
         qDebug() << url.toString();

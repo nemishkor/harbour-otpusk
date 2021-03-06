@@ -7,6 +7,7 @@
 #include <sailfishapp.h>
 #include "api.h"
 #include <QString>
+#include "offersmodel.h"
 #include "toursloader.h"
 #include "tourmodel.h"
 #include "locationmodel.h"
@@ -53,6 +54,9 @@ int main(int argc, char *argv[])
     context->setContextProperty("hotel", &hotel);
     HotelLoader hotelLoader(&api, &hotel);
     context->setContextProperty("hotelLoader", &hotelLoader);
+
+    OffersModel offersModel;
+    context->setContextProperty("offersModel", &offersModel);
 
 //    qmlRegisterUncreatableType<Tour>("harbour.otpusk", 1, 0, "TourType", "Pass tour c++ object from list view to separated page");
 //    qmlRegisterUncreatableType<OffersModel>("harbour.otpusk", 1, 0, "OffersModel", "To expose offersModel of c++ Tour object to qml");

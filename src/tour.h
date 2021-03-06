@@ -5,11 +5,11 @@
 #include <QString>
 #include "offersmodel.h"
 
+/**
+ * Contains main information about hotel and one price (offer)
+ */
 class Tour
-//        : public QObject
 {
-//    Q_OBJECT
-//    Q_PROPERTY(int id READ id)
 public:
     Tour(
             const int id,
@@ -18,14 +18,10 @@ public:
             const QString &country,
             const double ratingAvarage,
             const int ratingCount,
-            const double priceUah,
-            const double price,
-            const QString currency,
             const bool isFirst,
             const QString stars,
             const QString photo,
-            const QString priceId);
-//    Tour(const Tour &tour);
+            const Offer offer);
 
     int id() const;
     QString name() const;
@@ -33,14 +29,10 @@ public:
     QString country() const;
     double ratingAvarage() const;
     int ratingCount() const;
-    double priceUah() const;
-    double price() const;
-    QString currency() const;
     bool isFirst() const;
     QString stars() const;
     QString photo() const;
-    QString priceId() const;
-//    Q_INVOKABLE OffersModel* offers();
+    const Offer *offer() const;
 
 private:
     int m_id;
@@ -49,15 +41,11 @@ private:
     QString m_country;
     double m_ratingAvarage;
     int m_ratingCount;
-    double m_priceUah;
-    double m_price;
-    QString m_currency;
     // first item of page
     bool m_isFirst;
     QString m_stars;
     QString m_photo;
-    QString m_priceId;
-//    OffersModel m_offers;
+    const Offer m_offer;
 };
 
 #endif // TOUR_H

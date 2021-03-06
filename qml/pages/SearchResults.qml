@@ -127,10 +127,6 @@ Page {
 
                 delegate: TourListItem {
                     hotelId: model.id
-                    price: model.price
-                    priceUah: model.priceUah
-                    currency: model.currency
-                    priceId: model.priceId
                     photo: model.photo
                     stars: model.stars
                     name: model.name
@@ -138,6 +134,21 @@ Page {
                     ratingCount: model.ratingCount
                     country: model.country
                     city: model.city
+
+                    offerId: model.offerId
+                    dateFrom: model.dateFrom
+                    dateTo: model.dateTo
+                    roomType: model.roomType
+                    adults: model.adults
+                    childrenCount: model.childrenCount
+                    childrenAges: model.childrenAges
+                    nights: model.nights
+                    foodType: model.foodType
+                    roomName: model.roomName
+                    price: model.price
+                    priceUah: model.priceUah
+                    currency: model.currency
+                    transport: model.transport
                 }
 
             }

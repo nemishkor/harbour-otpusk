@@ -8,14 +8,7 @@ TourModel::TourModel(QObject *parent)
 void TourModel::addTour(Tour &tour)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
-//    qDebug("before append");
-//    qDebug(QString("0x%1").arg((quintptr)&tour,
-//                               QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
     m_tours << tour;
-
-//    qDebug("in list");
-//    qDebug(QString("0x%1").arg((quintptr)&m_tours.last(),
-//                               QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
 
     if(tour.isFirst()){
 //        qDebug("is first");
@@ -67,20 +60,42 @@ QVariant TourModel::data(const QModelIndex & index, int role) const {
         return tour.ratingAvarage();
     if (role == RatingCountRole)
         return tour.ratingCount();
-    if (role == PriceUahRole)
-        return tour.priceUah();
-    if (role == PriceRole)
-        return tour.price();
-    if (role == CurrencyRole)
-        return tour.currency();
     if (role == IsFirstRole)
         return tour.isFirst();
     if (role == StarsRole)
         return tour.stars();
     if (role == PhotoRole)
         return tour.photo();
-    if (role == PriceIdRole)
-        return tour.priceId();
+
+    if (role == OfferIdRole)
+        return tour.offer()->id();
+    if (role == DateFromRole)
+        return tour.offer()->dateFrom();
+    if (role == DateToRole)
+        return tour.offer()->dateTo();
+    if (role == RoomTypeRole)
+        return tour.offer()->roomType();
+    if (role == AdultsRole)
+        return tour.offer()->adults();
+    if (role == ChildrenCountRole)
+        return tour.offer()->childrenCount();
+    if (role == ChildrenAgesRole)
+        return tour.offer()->childrenAges();
+    if (role == NightsRole)
+        return tour.offer()->nights();
+    if (role == FoodTypeRole)
+        return tour.offer()->foodType();
+    if (role == RoomNameRole)
+        return tour.offer()->roomName();
+    if (role == PriceUahRole)
+        return tour.offer()->priceUah();
+    if (role == PriceRole)
+        return tour.offer()->price();
+    if (role == CurrencyRole)
+        return tour.offer()->currency();
+    if (role == TransportRole)
+        return tour.offer()->transport();
+
     return QVariant();
 }
 QHash<int, QByteArray> TourModel::roleNames() const {
@@ -91,12 +106,24 @@ QHash<int, QByteArray> TourModel::roleNames() const {
     roles[CountryRole] = "country";
     roles[RatingAvarageRole] = "ratingAvarage";
     roles[RatingCountRole] = "ratingCount";
-    roles[PriceUahRole] = "priceUah";
-    roles[PriceRole] = "price";
-    roles[CurrencyRole] = "currency";
     roles[IsFirstRole] = "isFirst";
     roles[StarsRole] = "stars";
     roles[PhotoRole] = "photo";
-    roles[PriceIdRole] = "priceId";
+
+    roles[OfferIdRole] = "offerId";
+    roles[DateFromRole] = "dateFrom";
+    roles[DateToRole] = "dateTo";
+    roles[RoomTypeRole] = "roomType";
+    roles[AdultsRole] = "adults";
+    roles[ChildrenCountRole] = "childrenCount";
+    roles[ChildrenAgesRole] = "childrenAges";
+    roles[NightsRole] = "nights";
+    roles[FoodTypeRole] = "foodType";
+    roles[RoomNameRole] = "roomName";
+    roles[PriceUahRole] = "priceUah";
+    roles[PriceRole] = "price";
+    roles[CurrencyRole] = "currency";
+    roles[TransportRole] = "transport";
+
     return roles;
 }

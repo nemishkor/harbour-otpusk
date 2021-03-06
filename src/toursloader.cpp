@@ -119,14 +119,52 @@ int ToursLoader::calculateProgress(QJsonDocument *json) {
     return (int) (100 * operatorsSearchProgressDone / progressList.size());
 }
 
+void ToursLoader::fillOffersModelFromResponse(int hotelId, OffersModel *offersModel)
+{
+    offersModel->clear();
+    QJsonObject::const_iterator i;
+    for(i = lastToursReply.constBegin(); i != lastToursReply.constEnd(); i++){
+        if(i.key().toInt() == hotelId){
+            qDebug() << "found tour in json by hotelId";
+
+            QJsonObject::const_iterator offersIterator;
+            QJsonObject jsonOffers = (*i).toObject()["offers"].toObject();
+            for (offersIterator = jsonOffers.constBegin(); offersIterator != jsonOffers.constEnd(); offersIterator++){
+                QJsonObject jsonOffer = (*offersIterator).toObject();
+
+                QJsonArray jsonIncluded = jsonOffer["o"].toArray();
+                QJsonArray::const_iterator offersIncludedIterator;
+                QStringList included;
+                for (offersIncludedIterator = jsonIncluded.begin(); offersIncludedIterator != jsonIncluded.end(); offersIncludedIterator++){
+                    included.append(offersIncludedIterator->toString());
+                }
+
+                offersModel->addOffer(Offer(
+                                jsonOffer["i"].toVariant().toString(),
+                                jsonOffer["last"].toString(),
+                                jsonOffer["ti"].toInt(),
+                                included,
+                                jsonOffer["d"].toString(),
+                                jsonOffer["dt"].toString(),
+                                jsonOffer["y"].toString().toUpper(),
+                                jsonOffer["a"].toInt(),
+                                jsonOffer["h"].toInt(),
+                                jsonOffer["ha"].toString(),
+                                jsonOffer["n"].toInt(),
+                                jsonOffer["f"].toString().toUpper(),
+                                jsonOffer["r"].toString(),
+                                jsonOffer["p"].toDouble(),
+                                jsonOffer["pl"].toDouble(),
+                                jsonOffer["u"].toString(),
+                                jsonOffer["t"].toString()));
+            }
+
+        }
+    }
+}
+
 void ToursLoader::addTour(QJsonObject hotel, bool isFirst)
 {
-    QString priceId("");
-    QJsonObject::const_iterator offersIterator;
-    QJsonObject jsonOffers = hotel["offers"].toObject();
-    for (offersIterator = jsonOffers.constBegin(); priceId == ""; offersIterator++){
-        priceId = (*offersIterator).toObject()["i"].toVariant().toString();
-    }
 
     Tour tour(hotel["i"].toInt(),
             hotel["n"].toString(),
@@ -134,56 +172,47 @@ void ToursLoader::addTour(QJsonObject hotel, bool isFirst)
             hotel["t"].toObject()["n"].toString(),
             hotel["r"].toDouble(),
             hotel["v"].toInt(),
-            hotel["p"].toDouble(),
-            hotel["po"].toDouble(),
-            hotel["pu"].toString(),
             isFirst,
             hotel["s"].toString(),
             hotel["f"].toString(),
-            priceId);
-
-//        qDebug("creating");
-//        qDebug(tour.name().toLatin1());
-//        qDebug(QString("0x%1").arg((quintptr)&tour,
-//                                   QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
-//        qDebug(QString("0x%1").arg((quintptr)tour.offers(),
-//                                   QT_POINTER_SIZE * 2, 16, QChar('0')).toLatin1());
-
-//    QJsonObject::const_iterator offersIterator;
-//    QJsonObject jsonOffers = hotel["offers"].toObject();
-//    for (offersIterator = jsonOffers.constBegin(); offersIterator != jsonOffers.constEnd(); offersIterator++){
-//        QJsonObject jsonOffer = (*offersIterator).toObject();
-
-//        QJsonArray jsonIncluded = jsonOffer["o"].toArray();
-//        QJsonArray::const_iterator offersIncludedIterator;
-//        QStringList included;
-//        for (offersIncludedIterator = jsonIncluded.begin(); offersIncludedIterator != jsonIncluded.end(); offersIncludedIterator++){
-//            included.append(offersIncludedIterator->toString());
-//        }
-
-//        tour.offers()->addOffer(Offer(
-//                        jsonOffer["i"].toVariant().toString(),
-//                        jsonOffer["last"].toString(),
-//                        jsonOffer["ti"].toInt(),
-//                        included,
-//                        jsonOffer["d"].toString(),
-//                        jsonOffer["dt"].toString(),
-//                        jsonOffer["y"].toString().toUpper(),
-//                        jsonOffer["a"].toInt(),
-//                        jsonOffer["h"].toInt(),
-//                        jsonOffer["ha"].toString(),
-//                        jsonOffer["n"].toInt(),
-//                        jsonOffer["f"].toString().toUpper(),
-//                        jsonOffer["r"].toString(),
-//                        jsonOffer["p"].toDouble(),
-//                        jsonOffer["pl"].toDouble(),
-//                        jsonOffer["u"].toString(),
-//                        jsonOffer["t"].toString()));
-//    }
-
-//        qDebug(QString("Added offers to tour: ").append(QString::number(tour.offers()->rowCount())).toLatin1());
+            getFirstOfferOfTour(&hotel));
 
     tourModel.addTour(tour);
+}
+
+Offer ToursLoader::getFirstOfferOfTour(QJsonObject *tour)
+{
+    QJsonObject::const_iterator offersIterator;
+    QJsonObject jsonOffers = (*tour)["offers"].toObject();
+    for (offersIterator = jsonOffers.constBegin(); true; offersIterator++){
+        QJsonObject jsonOffer = (*offersIterator).toObject();
+
+        QJsonArray jsonIncluded = jsonOffer["o"].toArray();
+        QJsonArray::const_iterator offersIncludedIterator;
+        QStringList included;
+        for (offersIncludedIterator = jsonIncluded.begin(); offersIncludedIterator != jsonIncluded.end(); offersIncludedIterator++){
+            included.append(offersIncludedIterator->toString());
+        }
+
+        return Offer(
+                    jsonOffer["i"].toVariant().toString(),
+                    jsonOffer["last"].toString(),
+                    jsonOffer["ti"].toInt(),
+                    included,
+                    jsonOffer["d"].toString(),
+                    jsonOffer["dt"].toString(),
+                    jsonOffer["y"].toString().toUpper(),
+                    jsonOffer["a"].toInt(),
+                    jsonOffer["h"].toInt(),
+                    jsonOffer["ha"].toString(),
+                    jsonOffer["n"].toInt(),
+                    jsonOffer["f"].toString().toUpper(),
+                    jsonOffer["r"].toString(),
+                    jsonOffer["p"].toDouble(),
+                    jsonOffer["pl"].toDouble(),
+                    jsonOffer["u"].toString(),
+                    jsonOffer["t"].toString());
+    }
 }
 
 void ToursLoader::handleSearchReply(QNetworkReply *reply){
@@ -200,23 +229,23 @@ void ToursLoader::handleSearchReply(QNetworkReply *reply){
     }
 
     qDebug("Request successfully finished");
-    QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
 //        qDebug(qPrintable(json.toJson()));
-    setTotal((int) json.object()["total"].toInt());
-    setProgress(calculateProgress(&json));
+    setTotal((int) response.object()["total"].toInt());
+    setProgress(calculateProgress(&response));
 
-    if(!json.object()["lastResult"].toBool()){
+    if(!response.object()["lastResult"].toBool()){
         continueSearch();
         return;
     }
 
     qDebug("Last result of search request");
 
-    QJsonObject::const_iterator jsonHotelsIterator;
-    QJsonObject hotels = json.object()["hotels"].toObject()[QString::number(page)].toObject();
+    QJsonObject::const_iterator i;
+    lastToursReply = response.object()["hotels"].toObject()[QString::number(page)].toObject();
     bool isFirst = true;
-    for (jsonHotelsIterator = hotels.constBegin(); jsonHotelsIterator != hotels.end(); ++jsonHotelsIterator){
-        addTour((*jsonHotelsIterator).toObject(), isFirst);
+    for (i = lastToursReply.constBegin(); i != lastToursReply.end(); ++i){
+        addTour((*i).toObject(), isFirst);
         isFirst = false;
     }
 

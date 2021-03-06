@@ -20,13 +20,24 @@ public:
         CountryRole,
         RatingAvarageRole,
         RatingCountRole,
-        PriceUahRole,
-        PriceRole,
-        CurrencyRole,
         IsFirstRole,
         StarsRole,
         PhotoRole,
-        PriceIdRole
+
+        OfferIdRole,
+        DateFromRole,
+        DateToRole,
+        RoomTypeRole,
+        AdultsRole,
+        ChildrenCountRole,
+        ChildrenAgesRole,
+        NightsRole,
+        FoodTypeRole,
+        RoomNameRole,
+        PriceUahRole,
+        PriceRole,
+        CurrencyRole,
+        TransportRole
     };
 
     TourModel(QObject *parent = 0);
