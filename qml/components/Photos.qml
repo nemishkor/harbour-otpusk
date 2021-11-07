@@ -5,13 +5,42 @@ Item {
 
     property var photos: []
 
+    id: photosComponent
     width: parent.width
-    height: list.heightImage + bigImage.height + Theme.paddingMedium
+    height: list.heightImage + photoFrame.height + Theme.paddingMedium
+    z: 1
 
-    Image{
-        id: bigImage
-        width: isPortrait ? parent.width : list.widthImage * parent.width / list.heightImage
-        height: Math.floor(bigImage.width * list.heightImage / list.widthImage)
+    Rectangle {
+        id: photoFrame
+        width: photosComponent.width
+        height: Math.floor(photosComponent.width * list.heightImage / list.widthImage)
+        Behavior on scale { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+        Behavior on x { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+        Behavior on y { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+        smooth: true
+        antialiasing: true
+        z: 2
+        Image{
+            id: bigImage
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectCrop
+            antialiasing: true
+            clip: true
+        }
+        PinchArea {
+            anchors.fill: parent
+            pinch.target: photoFrame
+            pinch.minimumRotation: 0
+            pinch.maximumRotation: 0
+            pinch.minimumScale: 0.8
+            pinch.maximumScale: 10
+            pinch.dragAxis: Pinch.XAndYAxis
+            onPinchFinished: function(){
+                photoFrame.scale = 1.0
+                photoFrame.y = 0.0
+                photoFrame.x = 0.0
+            }
+        }
     }
 
     Flickable {
@@ -20,10 +49,7 @@ Item {
         height: list.heightImage
         width: parent.width
         contentWidth: list.width
-        anchors {
-            top: bigImage.bottom
-            topMargin: Theme.paddingMedium
-        }
+        y: photoFrame.height + Theme.paddingMedium
 
         ListView {
             id: list
