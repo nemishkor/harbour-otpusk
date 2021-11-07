@@ -40,7 +40,7 @@ public:
         if(toursSuggestReply != NULL){
             toursSuggestReply->abort();
         }
-        QUrl url = QUrl("https://export.otpusk.com/api/tours/suggests");
+        QUrl url = QUrl("https://api.otpusk.com/api/2.4/tours/suggests");
         QUrlQuery query = QUrlQuery(url.query());
         query.addQueryItem("text", text);
         query.addQueryItem("lang", "ukr");
@@ -60,7 +60,7 @@ public:
         if(datesReply != NULL){
             datesReply->abort();
         }
-        QUrl url = QUrl("https://export.otpusk.com/api/tours/dates");
+        QUrl url = QUrl("https://api.otpusk.com/api/2.4/tours/dates");
         QUrlQuery query = QUrlQuery(url.query());
         query.addQueryItem("to", QString::number(locationId));
         query.addQueryItem("access_token", "2bf9c-83b4a-0dac2-e0893-8cf29");
@@ -78,7 +78,7 @@ public:
         if(hotelReply != NULL){
             hotelReply->abort();
         }
-        QUrl url = QUrl("https://export.otpusk.com/api/tours/hotel");
+        QUrl url = QUrl("https://api.otpusk.com/api/2.4/tours/hotel");
         QUrlQuery query = QUrlQuery(url.query());
         query.addQueryItem("hotelId", QString::number(id));
         query.addQueryItem("lang", QString("ukr"));

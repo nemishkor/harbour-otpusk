@@ -25,7 +25,7 @@ void ToursLoader::continueSearch(){
 }
 
 void ToursLoader::sendSearchRequest(){
-    QUrl url = QUrl("https://export.otpusk.com/api/tours/search");
+    QUrl url = QUrl("https://api.otpusk.com/api/2.4/tours/search");
     QUrlQuery query = QUrlQuery(url.query());
     query.addQueryItem("to", QString::number(currentSearchParameters->getLocationId()));
     query.addQueryItem("checkIn", currentSearchParameters->getStartDate());
