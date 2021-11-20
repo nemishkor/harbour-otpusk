@@ -51,8 +51,7 @@ public:
     }
 
     Q_INVOKABLE void update(QString name) {
-        networkError = QString("");
-        emit networkErrorChanged();
+        setNetworkError(QString(""));
         m_api->toursSuggest(name);
     }
 
@@ -94,6 +93,7 @@ private:
   QList<Location> mItems;
   Api *m_api;
   QString networkError;
+  void setNetworkError(QString networkError);
 
 private slots:
 
@@ -104,8 +104,7 @@ private slots:
       }
       if(reply->error() != QNetworkReply::NoError){
           qDebug("Got network error");
-          networkError = reply->errorString();
-          emit networkErrorChanged();
+          setNetworkError(reply->errorString());
           return;
       }
       QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
