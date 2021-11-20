@@ -34,95 +34,26 @@ public:
     };
 
     LocationModel(Api *api);
-
-    int rowCount(const QModelIndex & = QModelIndex()) const override{
-        return mItems.size();
-    }
-
-    QVariant data(const QModelIndex &index, int role) const override{
-        if (index.row() < 0 || index.row() >= mItems.count())
-            return QVariant();
-        const Location &location = mItems[index.row()];
-        if(role == IdRole)
-            return location.id();
-        if(role == NameRole)
-            return location.name();
-        return QVariant();
-    }
-
-    Q_INVOKABLE void update(QString name) {
-        setNetworkError(QString(""));
-        m_api->toursSuggest(name);
-    }
-
-    QString getNetworkError() const{
-        return networkError;
-    }
-
-public slots:
-//  void insert(const Location &item){
-//    beginInsertRows(QModelIndex(), 0, 0);
-//    mItems << item;
-//    endInsertRows();
-//  }
-
-//  void remove(Location *item){
-//    for (int i = 0; i < mItems.size(); ++i) {
-//      if (&mItems.at(i) == item) {
-//        beginRemoveRows(QModelIndex(), i, i);
-//        mItems.removeAt(i);
-//        endRemoveRows();
-//        break;
-//      }
-//    }
-//  }
+    int rowCount(const QModelIndex & = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    Q_INVOKABLE void update(QString name);
+    QString getNetworkError() const;
 
 protected:
-  QHash<int, QByteArray> roleNames() const override{
-    QHash<int, QByteArray> roles;
-    roles[IdRole] = "id";
-    roles[NameRole] = "name";
-    return roles;
-  }
-
-  Qt::ItemFlags flags(const QModelIndex &) const override{
-      return Qt::ItemIsEditable;
-  }
+    QHash<int, QByteArray> roleNames() const override;
+    Qt::ItemFlags flags(const QModelIndex &) const override;
 
 private:
-  QList<Location> mItems;
-  Api *m_api;
-  QString networkError;
-  void setNetworkError(QString networkError);
+    QList<Location> mItems;
+    Api *m_api;
+    QString networkError;
+    void setNetworkError(QString networkError);
 
 private slots:
-
-  void updateFromApiReply(QNetworkReply *reply){
-      if(reply->error() == QNetworkReply::OperationCanceledError){
-          qDebug("Request canceled");
-          return;
-      }
-      if(reply->error() != QNetworkReply::NoError){
-          qDebug("Got network error");
-          setNetworkError(reply->errorString());
-          return;
-      }
-      QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
-//      qDebug(qPrintable(json.toJson()));
-      QJsonObject response = json.object()["response"].toObject();
-      QJsonObject::const_iterator i;
-      mItems.clear();
-      beginInsertRows(QModelIndex(), 0, response.size());
-      for (i = response.constBegin(); i != response.end(); ++i){
-          QJsonObject result = (*i).toObject();
-          mItems.append(Location(result["id"].toString().toInt(), result["name"].toString()));
-      }
-//      qDebug("iserted " + QString::number(mItems.count()).toLatin1() + " locations");
-      endInsertRows();
-  }
+    void updateFromApiReply(QNetworkReply *reply);
 
 signals:
-  void networkErrorChanged();
+    void networkErrorChanged();
 
 };
 
