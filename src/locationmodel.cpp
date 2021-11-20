@@ -16,6 +16,8 @@ QVariant LocationModel::data(const QModelIndex &index, int role) const{
         return location.id();
     if(role == NameRole)
         return location.name();
+    if(role == BoldRole)
+        return location.bold();
     return QVariant();
 }
 
@@ -32,6 +34,7 @@ QHash<int, QByteArray> LocationModel::roleNames() const{
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[BoldRole] = "bold";
     return roles;
 }
 
@@ -67,10 +70,36 @@ void LocationModel::updateFromApiReply(QNetworkReply *reply){
     //qDebug(qPrintable(json.toJson()));
     QJsonObject response = json.object()["response"].toObject();
     QJsonObject::const_iterator i;
+    QList<Location>::iterator listIterator;
+    int weight;
+    bool added;
     beginInsertRows(QModelIndex(), 0, response.size() - 1);
     for (i = response.constBegin(); i != response.end(); ++i){
+        added = false;
         QJsonObject result = (*i).toObject();
-        mItems.append(Location(result["id"].toString().toInt(), result["name"].toString()));
+        weight = result["weight"].toInt();
+        if(weight > 0){
+            for (listIterator = mItems.begin(); listIterator != mItems.end(); ++listIterator){
+                if(weight > (*listIterator).weight()){
+                    mItems.insert(listIterator, Location(
+                        result["id"].toString().toInt(),
+                        result["name"].toString(),
+                        result["bold"].toString() == "1",
+                        weight
+                    ));
+                    added = true;
+                    break;
+                }
+            }
+        }
+        if(!added){
+            mItems.append(Location(
+                result["id"].toString().toInt(),
+                result["name"].toString(),
+                result["bold"].toString() == "1",
+                weight
+            ));
+        }
     }
     //      qDebug("iserted " + QString::number(mItems.count()).toLatin1() + " locations");
     endInsertRows();

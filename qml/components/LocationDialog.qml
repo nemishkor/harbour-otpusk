@@ -72,6 +72,7 @@ Dialog {
                 anchors.verticalCenter: parent.verticalCenter
                 color: searchString.length > 0 ? (highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor)
                                                : (highlighted ? Theme.highlightColor : Theme.primaryColor)
+                font.bold: model.bold
                 textFormat: Text.StyledText
                 text: Theme.highlightText(model.name, searchString, Theme.highlightColor)
                 truncationMode: TruncationMode.Fade
