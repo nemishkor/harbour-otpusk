@@ -8,11 +8,12 @@
 class Location
 {
 public:
-    Location(const int id, const QString &name, const bool bold, const int weight):
+    Location(const int id, const QString &name, const bool bold, const int weight, const QString &uah):
         m_id(id),
         m_name(name),
         m_bold(bold),
-        m_weight(weight){}
+        m_weight(weight),
+        m_uah(uah){}
     QString name() const{
         return m_name;
     }
@@ -25,12 +26,16 @@ public:
     int weight() const{
         return m_weight;
     }
+    QString uah() const{
+        return m_uah;
+    }
 
 private:
     int m_id;
     QString m_name;
     bool m_bold;
     int m_weight;
+    QString m_uah;
 
 };
 
@@ -43,7 +48,8 @@ public:
     enum LocationRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
-        BoldRole
+        BoldRole,
+        UahRole
     };
 
     LocationModel(Api *api);

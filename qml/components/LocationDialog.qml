@@ -79,6 +79,16 @@ Dialog {
                 wrapMode: "WordWrap"
                 width: parent.width - 2 * Theme.horizontalPageMargin
             }
+            Label {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
+                color: searchString.length > 0 ? (highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor)
+                                               : (highlighted ? Theme.highlightColor : Theme.primaryColor)
+                font.bold: model.bold
+                text: "від " + model.uah + "к грн."
+                wrapMode: "WordWrap"
+            }
         }
 
         VerticalScrollDecorator {}
