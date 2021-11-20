@@ -58,12 +58,16 @@ void LocationModel::updateFromApiReply(QNetworkReply *reply){
         setNetworkError(reply->errorString());
         return;
     }
+
+    beginRemoveRows(QModelIndex(), 0, mItems.size() - 1);
+    mItems.clear();
+    endRemoveRows();
+
     QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
-    //      qDebug(qPrintable(json.toJson()));
+    //qDebug(qPrintable(json.toJson()));
     QJsonObject response = json.object()["response"].toObject();
     QJsonObject::const_iterator i;
-    mItems.clear();
-    beginInsertRows(QModelIndex(), 0, response.size());
+    beginInsertRows(QModelIndex(), 0, response.size() - 1);
     for (i = response.constBegin(); i != response.end(); ++i){
         QJsonObject result = (*i).toObject();
         mItems.append(Location(result["id"].toString().toInt(), result["name"].toString()));
